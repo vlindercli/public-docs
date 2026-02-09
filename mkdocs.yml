@@ -91,7 +91,7 @@ plugins:
 
 nav:
   - Home: index.md
-  - Develop: develop.md
+  - Contribute: contribute.md
   - Tutorials:
     - Getting Started: tutorials/getting-started.md
     - Adding Models: tutorials/adding-models.md

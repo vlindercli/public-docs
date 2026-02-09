@@ -1,8 +1,16 @@
-# Develop
+# Contribute
 
-Build and run VlinderCLI from source. This is the recommended way to try it while the project is in active development.
+VlinderCLI is open source and contributions are welcome. Whether it's a bug report, feature idea, documentation fix, or code contribution — we'd love your help.
 
-## Prerequisites
+**Repository:** [github.com/vlindercli/vlindercli](https://github.com/vlindercli/vlindercli)
+
+- [Open an issue](https://github.com/vlindercli/vlindercli/issues/new) — bug reports, feature requests, questions
+- [Browse open issues](https://github.com/vlindercli/vlindercli/issues) — find something to work on
+- [Submit a pull request](https://github.com/vlindercli/vlindercli/pulls) — we review all PRs
+
+## Build from Source
+
+### Prerequisites
 
 | Dependency | Purpose | Install |
 |-----------|---------|---------|
@@ -13,7 +21,7 @@ Build and run VlinderCLI from source. This is the recommended way to try it whil
 | **Podman** | Container runtime | `brew install podman` (macOS) or [podman.io](https://podman.io/docs/installation) |
 | **Ollama** | Local LLM inference | [ollama.com](https://ollama.com) |
 
-## Clone and build
+### Clone and build
 
 ```bash
 git clone https://github.com/vlindercli/vlindercli.git
@@ -21,7 +29,7 @@ cd vlindercli
 cargo build
 ```
 
-## Configure
+### Configure
 
 Create `~/.vlinder/config.toml`:
 
@@ -59,7 +67,7 @@ sqlite = 1
 sqlite = 1
 ```
 
-## Run (four terminals)
+### Run (four terminals)
 
 VlinderCLI's distributed architecture uses NATS for message passing between workers. You'll need four terminals:
 
@@ -107,7 +115,7 @@ VlinderCLI's distributed architecture uses NATS for message passing between work
     just support
     ```
 
-## Build agent images
+### Build agent images
 
 Agents run as OCI containers. Build them with `just`:
 
@@ -123,7 +131,7 @@ See all available recipes:
 just --list
 ```
 
-## What to expect
+### What to expect
 
 With all four terminals running, you should see:
 

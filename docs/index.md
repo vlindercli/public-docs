@@ -14,7 +14,7 @@ hide:
 Design, build, run, and observe AI agents.
 Debug with time-travel. Scale seamlessly from laptop to cluster.
 
-[Get Started](develop.md){ .md-button .md-button--primary }
+[Get Started](tutorials/getting-started.md){ .md-button .md-button--primary }
 [GitHub](https://github.com/vlindercli/vlindercli){ .md-button }
 
 </div>
