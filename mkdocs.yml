@@ -1,0 +1,142 @@
+site_name: VlinderCLI
+site_url: https://vlinder.dev
+site_description: AI agents that can time travel — documentation for VlinderCLI
+site_author: VlinderCLI Contributors
+
+repo_url: https://github.com/vlindercli/vlindercli
+repo_name: vlindercli/vlindercli
+
+theme:
+  name: material
+  custom_dir: overrides
+  font:
+    text: Inter
+    code: JetBrains Mono
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: deep purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: deep purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.indexes
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - content.code.copy
+    - content.code.annotate
+    - search.suggest
+    - search.highlight
+    - search.share
+    - toc.follow
+
+extra_css:
+  - stylesheets/extra.css
+
+extra:
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX
+    feedback:
+      title: Was this page helpful?
+      ratings:
+        - icon: material/thumb-up-outline
+          name: This page was helpful
+          data: 1
+          note: >-
+            Thanks for your feedback!
+        - icon: material/thumb-down-outline
+          name: This page could be improved
+          data: 0
+          note: >-
+            Thanks for your feedback! Help us improve by
+            <a href="https://github.com/vlindercli/vlinder/issues/new?title=[docs]+{title}+-+{url}" target="_blank" rel="noopener">opening an issue</a>.
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/vlindercli/vlinder
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+plugins:
+  - search
+  - minify:
+      minify_html: true
+
+nav:
+  - Home: index.md
+  - Tutorials:
+    - tutorials/index.md
+    - Getting Started: tutorials/getting-started.md
+    - Your First Agent: tutorials/your-first-agent.md
+    - Your First Fleet: tutorials/your-first-fleet.md
+  - How-to Guides:
+    - how-to/index.md
+    - Installation: how-to/installation.md
+    - Configuration: how-to/configuration.md
+    - Manage Models: how-to/manage-models.md
+    - Storage: how-to/storage.md
+    - Time-Travel Debugging: how-to/time-travel-debugging.md
+    - Observability: how-to/observability.md
+    - Distributed Deployment: how-to/distributed-deployment.md
+  - Reference:
+    - reference/index.md
+    - CLI:
+      - reference/cli/index.md
+      - agent: reference/cli/agent.md
+      - fleet: reference/cli/fleet.md
+      - model: reference/cli/model.md
+      - timeline: reference/cli/timeline.md
+      - daemon: reference/cli/daemon.md
+      - support: reference/cli/support.md
+    - agent.toml: reference/agent-toml.md
+    - fleet.toml: reference/fleet-toml.md
+    - model.toml: reference/model-toml.md
+    - config.toml: reference/config-toml.md
+    - Environment Variables: reference/environment-variables.md
+    - Services: reference/services.md
+  - Explanation:
+    - explanation/index.md
+    - Architecture: explanation/architecture.md
+    - Timelines: explanation/timelines.md
+    - Queue System: explanation/queue-system.md
+    - Agents Model: explanation/agents-model.md
+    - Storage Model: explanation/storage-model.md
+    - Domain Model: explanation/domain-model.md
