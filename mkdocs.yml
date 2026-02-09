@@ -111,6 +111,7 @@ nav:
     - Timelines: explanation/timelines.md
     - Queue System: explanation/queue-system.md
     - Storage Model: explanation/storage-model.md
+    - Conversations Repository: explanation/conversations-repo.md
     - Domain Model: explanation/domain-model.md
   - Reference:
     - CLI Commands:
@@ -127,4 +128,5 @@ nav:
       - model.toml: reference/model-toml.md
       - config.toml: reference/config-toml.md
       - Environment Variables: reference/environment-variables.md
+    - Conversations Repository: reference/conversations-repo.md
     - Services: reference/services.md
