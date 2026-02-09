@@ -91,5 +91,5 @@ plugins:
 
 nav:
   - Home: index.md
-  - Install: how-to/installation.md
+  - Develop: develop.md
   - Configuration: how-to/configuration.md

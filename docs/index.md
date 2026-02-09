@@ -16,7 +16,7 @@ Model, build, run, and observe AI agents. Debug with time-travel. Scale seamless
 curl -fsSL https://vlindercli.dev/install.sh | sh
 ```
 
-[Install](how-to/installation.md){ .md-button .md-button--primary }
+[Get Started](develop.md){ .md-button .md-button--primary }
 [GitHub](https://github.com/vlindercli/vlindercli){ .md-button }
 
 </div>
