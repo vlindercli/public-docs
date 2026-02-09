@@ -105,3 +105,10 @@ nav:
     - Time-Travel Debugging: how-to/time-travel-debugging.md
     - Observability: how-to/observability.md
     - Distributed Deployment: how-to/distributed-deployment.md
+  - Explanation:
+    - Architecture: explanation/architecture.md
+    - Agents Model: explanation/agents-model.md
+    - Timelines: explanation/timelines.md
+    - Queue System: explanation/queue-system.md
+    - Storage Model: explanation/storage-model.md
+    - Domain Model: explanation/domain-model.md
