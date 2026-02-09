@@ -14,7 +14,7 @@ The script will:
 2. Create `~/.vlinder/` with a default config
 3. Check for prerequisites and tell you what's missing
 4. Set up NATS and the vlinder daemon as system services
-5. Pull the default model and deploy the support fleet
+5. Pull the default model and install the support fleet (a reference implementation)
 
 If prerequisites are missing, the script stops after step 3 and prints the install commands you need. Install them, then re-run the script.
 
@@ -70,13 +70,13 @@ After a successful install, you'll see:
   ✓ NATS         started with JetStream (launchd)
   ✓ Service      started (launchd)
   ✓ Model        phi3 pulled and registered
-  ✓ Support      fleet deployed
+  ✓ Support      fleet installed (reference implementation)
 
   Vlinder is installed and running.
 
   Try it:
 
-    vlinder support
+    vlinder help
 ```
 
 ### Install a specific version
