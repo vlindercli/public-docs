@@ -1,0 +1,48 @@
+/* Hero section on landing page */
+.md-typeset .hero {
+  text-align: center;
+  padding: 2rem 0 3rem;
+}
+
+.md-typeset .hero h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.md-typeset .hero p {
+  font-size: 1.2rem;
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+}
+
+/* Quadrant grid for Diataxis categories */
+.md-typeset .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.md-typeset .grid .card {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.md-typeset .grid .card:hover {
+  border-color: var(--md-primary-fg-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.md-typeset .grid .card h3 {
+  margin-top: 0;
+}
+
+/* Tighten spacing in reference tables */
+.md-typeset table:not([class]) th,
+.md-typeset table:not([class]) td {
+  padding: 0.5rem 0.75rem;
+}
