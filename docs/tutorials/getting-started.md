@@ -8,19 +8,11 @@ In this tutorial, you'll install VlinderCLI, verify the setup, and run the bundl
 
 ## Step 1: Install VlinderCLI
 
-```bash
-curl -fsSL https://vlindercli.dev/install.sh | sh
-```
-
-The script downloads the vlinder binary, creates `~/.vlinder/` with a default config, and checks for prerequisites.
-
-If **NATS** or **Podman** aren't installed, the script stops and prints the install commands you need. Install them, then re-run the script.
-
-See [Installation](../how-to/installation.md) for full details, prerequisites, and platform-specific instructions.
+Follow the [Installation](../how-to/installation.md) guide to build from source, install prerequisites (NATS, Podman), and bootstrap `~/.vlinder/`.
 
 ## Step 2: Verify
 
-After a successful install, NATS and the vlinder daemon are running as system services. Verify:
+With NATS and the vlinder daemon running, verify:
 
 ```bash
 vlinder agent list
