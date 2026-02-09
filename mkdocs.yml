@@ -91,10 +91,17 @@ plugins:
 
 nav:
   - Home: index.md
-  - Installation: how-to/installation.md
-  - Getting Started: tutorials/getting-started.md
-  - Adding Models: tutorials/adding-models.md
-  - Your First Agent: tutorials/your-first-agent.md
-  - Your First Fleet: tutorials/your-first-fleet.md
-  - Configuration: how-to/configuration.md
   - Develop: develop.md
+  - Tutorials:
+    - Getting Started: tutorials/getting-started.md
+    - Adding Models: tutorials/adding-models.md
+    - Your First Agent: tutorials/your-first-agent.md
+    - Your First Fleet: tutorials/your-first-fleet.md
+  - How-to Guides:
+    - Installation: how-to/installation.md
+    - Manage Models: how-to/manage-models.md
+    - Storage: how-to/storage.md
+    - Configuration: how-to/configuration.md
+    - Time-Travel Debugging: how-to/time-travel-debugging.md
+    - Observability: how-to/observability.md
+    - Distributed Deployment: how-to/distributed-deployment.md
