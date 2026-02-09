@@ -92,3 +92,4 @@ plugins:
 nav:
   - Home: index.md
   - Install: how-to/installation.md
+  - Configuration: how-to/configuration.md
