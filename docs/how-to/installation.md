@@ -119,12 +119,13 @@ vlinder --version
 
 ## Services
 
-The install script sets up two system services that start automatically on login:
+The install script sets up two system services that start automatically on login. Ollama manages its own service separately.
 
-| Service | macOS | Linux |
-|---------|-------|-------|
-| **NATS** | `dev.vlinder.nats` (launchd) | `vlinder-nats` (systemd) |
-| **Vlinder daemon** | `dev.vlinder.daemon` (launchd) | `vlinder` (systemd) |
+| Service | macOS | Linux | Managed by |
+|---------|-------|-------|------------|
+| **NATS** | `dev.vlinder.nats` (launchd) | `vlinder-nats` (systemd) | Vlinder installer |
+| **Vlinder daemon** | `dev.vlinder.daemon` (launchd) | `vlinder` (systemd) | Vlinder installer |
+| **Ollama** | `com.ollama.ollama` (launchd) | `ollama` (systemd) | Ollama installer |
 
 === "macOS"
 
