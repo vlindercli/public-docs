@@ -112,3 +112,19 @@ nav:
     - Queue System: explanation/queue-system.md
     - Storage Model: explanation/storage-model.md
     - Domain Model: explanation/domain-model.md
+  - Reference:
+    - CLI Commands:
+      - Overview: reference/cli/index.md
+      - vlinder agent: reference/cli/agent.md
+      - vlinder fleet: reference/cli/fleet.md
+      - vlinder model: reference/cli/model.md
+      - vlinder timeline: reference/cli/timeline.md
+      - vlinder daemon: reference/cli/daemon.md
+      - vlinder support: reference/cli/support.md
+    - Configuration:
+      - agent.toml: reference/agent-toml.md
+      - fleet.toml: reference/fleet-toml.md
+      - model.toml: reference/model-toml.md
+      - config.toml: reference/config-toml.md
+      - Environment Variables: reference/environment-variables.md
+    - Services: reference/services.md
