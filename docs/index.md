@@ -11,7 +11,7 @@ hide:
 
 **AI agents that can time travel.**
 
-Model, build, run, and observe AI agents.
+Design, build, run, and observe AI agents.
 Debug with time-travel. Scale seamlessly from laptop to cluster.
 
 [Get Started](develop.md){ .md-button .md-button--primary }
