@@ -32,6 +32,27 @@
   margin-top: 0.5rem;
 }
 
+/* Landing buttons — inline row, smaller */
+.md-typeset .landing-left .md-button {
+  font-size: 0.8rem;
+  padding: 0.4rem 1rem;
+  margin-right: 0.5rem;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Contribute button — GitHub green */
+.md-typeset .md-button--contribute {
+  background-color: #238636;
+  border-color: #238636;
+  color: #fff;
+}
+.md-typeset .md-button--contribute:hover {
+  background-color: #2ea043;
+  border-color: #2ea043;
+  color: #fff;
+}
+
 /* Stack on small screens */
 @media (max-width: 960px) {
   .md-typeset .landing {

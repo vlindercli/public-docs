@@ -93,7 +93,7 @@ nav:
   - Home: index.md
   - Contribute: contribute.md
   - Tutorials:
-    - Getting Started: tutorials/getting-started.md
+    - Get Started: tutorials/getting-started.md
     - Adding Models: tutorials/adding-models.md
     - Your First Agent: tutorials/your-first-agent.md
     - Your First Fleet: tutorials/your-first-fleet.md

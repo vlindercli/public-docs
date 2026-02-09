@@ -15,12 +15,12 @@ Design, build, run, and observe AI agents.
 Debug with time-travel. Scale seamlessly from laptop to cluster.
 
 [Get Started](tutorials/getting-started.md){ .md-button .md-button--primary }
-[GitHub](https://github.com/vlindercli/vlindercli){ .md-button }
+[Contribute](contribute.md){ .md-button .md-button--contribute }
 
 </div>
 <div class="landing-right" markdown>
 
-```title="Build a grocery list, then fork the timeline"
+```title="Converse with an agent, then fork the timeline"
 $ vlinder agent run -p agents/todoapp
 > add buy milk
 > add buy eggs
