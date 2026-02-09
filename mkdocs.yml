@@ -93,3 +93,4 @@ nav:
   - Home: index.md
   - Develop: develop.md
   - Configuration: how-to/configuration.md
+  - Your First Agent: tutorials/your-first-agent.md
