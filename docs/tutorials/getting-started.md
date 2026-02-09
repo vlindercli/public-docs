@@ -26,7 +26,7 @@ After a successful install, NATS and the vlinder daemon are running as system se
 vlinder agent list
 ```
 
-This connects to the daemon and shows deployed agents (empty for a fresh install).
+This connects to the daemon and shows deployed agents. You should see the support fleet's agents listed.
 
 ## Step 3: Run the Support Agent
 
