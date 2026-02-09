@@ -91,6 +91,9 @@ plugins:
 
 nav:
   - Home: index.md
-  - Develop: develop.md
-  - Configuration: how-to/configuration.md
+  - Installation: how-to/installation.md
+  - Getting Started: tutorials/getting-started.md
   - Your First Agent: tutorials/your-first-agent.md
+  - Your First Fleet: tutorials/your-first-fleet.md
+  - Configuration: how-to/configuration.md
+  - Develop: develop.md
