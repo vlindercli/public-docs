@@ -6,7 +6,7 @@ Agents are VlinderCLI's core abstraction — self-contained units of AI capabili
 
 An agent is an OCI container paired with a declarative manifest ([`agent.toml`](../reference/agent-toml.md)). The manifest declares what the agent needs — models, services, storage, knowledge — and VlinderCLI provisions everything. Agent code is infrastructure-agnostic: it doesn't know whether it's running locally or in a distributed cluster.
 
-Because every decision an agent makes flows through the platform as a typed message, the platform can capture complete state at every step. This is what makes rewind, branching, and repair possible — the agent doesn't need to do anything special.
+Because every decision an agent makes flows through the platform as a typed message, the platform can capture complete state at every step. This is what makes rewind and branching possible — the agent doesn't need to do anything special.
 
 ## Lifecycle
 
