@@ -13,4 +13,5 @@ Explanation documentation is **understanding-oriented** and helps you learn abou
 | [Storage Model](storage-model.md) | The three rules, content addressing, and the BYOS pattern |
 | [State Store](state-store.md) | The versioned object model behind content addressing |
 | [Domain Model](domain-model.md) | Core types, traits, and their relationships |
+| [Time Travel](time-travel.md) | Rewind, fork, and continue from any completed turn |
 | [Conversations Repository](conversations-repo.md) | The read-only git projection of the message DAG |
