@@ -5,29 +5,30 @@ Timelines are VlinderCLI's mechanism for verifiable, forkable agent state. Every
 ## Core Concepts
 
 ### Submissions
-Each user input is a **submission**. Processing a submission produces a **state hash** — a Merkle DAG node that captures the complete state after all service interactions. The state hash chains to the previous one, forming a verifiable history.
+Each user input is a **submission**. The `SubmissionId` is a content-addressed SHA-256 hash of the payload, session, and parent submission — so identical inputs in the same context always produce the same ID. Processing a submission produces a chain of DAG nodes that capture every service interaction.
 
 ### Sessions
-A **session** (`ses-{uuid}`) groups multiple submissions into a logical conversation. Each session is a branch in the Merkle DAG.
+A **session** groups multiple submissions into a logical conversation. Each session is an island — its own independent Merkle chain with its own history. Sessions don't share state.
 
 ### Sequences
 Within a single submission, service interactions (inference calls, storage operations) are ordered by **sequence** numbers. This ordering enables deterministic replay of the exact service call chain.
 
 ## The Merkle DAG
 
-All agent side effects are tracked in a content-addressed Merkle DAG. Each state hash incorporates:
+All agent side effects are tracked in a content-addressed Merkle DAG. Each DAG node incorporates:
 
-- The previous state hash
-- The submission content
-- All service interaction results (ordered by sequence)
+- The parent node hash
+- The message payload
+- The message type and session context
+- The agent's state hash (for complete messages)
 
 This creates a verifiable chain — any tampering with intermediate state breaks the hash chain and is immediately detectable.
 
-Agent data itself lives in the [storage workers](storage-model.md) (SQLite). The Merkle DAG doesn't store the data — it stores the hashes that make the data verifiable.
+Agent data itself lives in the [storage workers](storage-model.md). The Merkle DAG doesn't store the data — it stores the hashes that make the data verifiable.
 
 ## Forking
 
-Forking creates a new branch from a historical node in the DAG:
+Forking creates a new timeline from a historical node in a session's DAG:
 
 ```mermaid
 gitGraph
@@ -42,49 +43,41 @@ gitGraph
 
 After forking from `submit-2`, new submissions create a divergent path. The original history remains untouched. Storage state is restored to match the fork point — this is what makes time-travel debugging work for stateful agents.
 
-The low-level `fork` command creates a branch at any commit. For the common case of debugging and fixing errors, the `checkout` + `repair` workflow (below) is the recommended path — it automates state restoration and enters the REPL in one step.
+Fork sends a `ForkMessage` through the queue, so all DAG projections react to it.
 
 ## Repair
 
-**Repair** is the operational pattern for time-travel debugging: move HEAD to a known-good commit, branch off, restore agent state, and continue.
+**Repair** is the operational pattern for time-travel debugging: identify a failure in a session, fork from the failure point, replay the failed service call, and continue.
 
-The workflow is:
+The workflow uses `vlinder session` commands:
 
-1. `checkout` — moves HEAD to the target commit (detached). The commit's `State:` trailer records the agent's state hash at that point.
-2. `repair` — creates a `repair-YYYY-MM-DD` branch from the detached HEAD, reads the `State:` trailer, restores the agent's state to that hash, and enters the REPL.
+1. `vlinder session list <agent>` — find the session
+2. `vlinder session get <session-id>` — browse turns and messages, identify the failed request by its canonical hash
+3. `vlinder session fork <session-id> --from <hash> --name <branch>` — create a named timeline from the failure point
+4. `vlinder session repair <branch>` — replay the failed service call via the agent's checkpoint handler
+5. `vlinder session promote <branch>` — seal the old timeline, make the repaired branch canonical
 
-The repair branch is fully independent — the original timeline is untouched. You can have multiple repair branches from different points in the same timeline. Because git deduplicates objects, branches that share history share the underlying commits — no data is copied.
+The branch name ties fork, repair, and promote together. Multiple forks of the same session can exist independently.
 
-This pattern relies on the `State:` trailer that every complete message carries. Without it, the system wouldn't know which state to restore. The trailer is the link between the conversation history (git) and the agent's operational state (SQLite storage).
+Repair relies on two things: the `state` field on the DAG node (so the platform knows what state to restore) and the checkpoint name (so the platform knows where to deliver the replayed response). Without checkpoints, the only option from a mid-execution failure is to re-invoke from the last complete point.
 
 ## Promote
 
-After a successful repair, **promote** makes the repair branch canonical. It answers the question: "which timeline is the real one?"
+After a successful repair, **promote** makes the repair timeline canonical. It answers the question: "which timeline is the real one?"
 
-Promote does three things:
+Promote seals the old timeline and relabels it as `broken-YYYY-MM-DD` — nothing is deleted. The repaired branch becomes `main`. Both timelines continue to exist. The `broken-` timeline preserves the original (erroneous) history for auditing or further inspection.
 
-1. Labels the old `main` as `broken-YYYY-MM-DD` — nothing is deleted
-2. Moves `main` to the current HEAD
-3. Switches to `main`
+Because the DAG is content-addressed, timelines that share history before the fork point share the underlying nodes — no data is copied.
 
-Both timelines continue to exist. The `broken-` branch preserves the original (erroneous) history for auditing or further inspection. Because commits before the fork point are shared, the storage cost of keeping both timelines is minimal — only the divergent commits are unique to each branch.
+## Why a Merkle DAG?
 
-## Why Git?
+The properties that make time travel possible — content addressing, append-only history, branching — are properties of Merkle DAGs. If you've used git, you already understand the data structure: nodes chain via parent hashes, and every node is content-addressed by SHA-256.
 
-VlinderCLI uses git as the Merkle DAG backend. Git's object model is itself a Merkle DAG — commits chain via parent hashes, and every object is content-addressed by SHA. Rather than building a custom Merkle DAG implementation, VlinderCLI uses one that already exists:
-
-- **Content addressing** (SHA) — every state is uniquely identified
-- **Branching** — forking is a native operation
-- **Append-only history** — commits are immutable once written
-- **Familiar tooling** — `git log`, `git diff`, and standard git tools work on the timeline repository
-
-The timeline repository lives at `~/.vlinder/conversations/`. The `SubmissionId` is the git commit SHA. Sessions map to branches.
-
-Git is the implementation detail, not the abstraction. The timeline API doesn't expose git concepts — it exposes submissions, sessions, and forks. A different Merkle DAG backend could replace git without changing the agent-facing interface.
+VlinderCLI stores the authoritative Merkle DAG in its DAG store. The [Conversations Repository](conversations-repo.md) is an optional read-only projection that writes each message as a git commit — so you can use `git log`, `git diff`, and standard git tooling to inspect the DAG. But the git repo is a visualization aid, not a system component.
 
 ## See Also
 
 - [Time-Travel Debugging](../how-to/time-travel-debugging.md) — practical workflows
-- [CLI: `vlinder timeline`](../reference/cli/timeline.md) — command reference
-- [State Store](state-store.md) — the versioned SQLite store that State: trailers point into
+- [State Store](state-store.md) — the versioned store that state hashes point into
 - [Storage Model](storage-model.md) — how storage integrates with content addressing
+- [Conversations Repository](conversations-repo.md) — the read-only git projection
