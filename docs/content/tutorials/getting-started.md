@@ -25,7 +25,7 @@ Run `vlinder help` to see the available subcommands:
 vlinder help
 ```
 
-You'll see commands for running agents, managing fleets, working with models, inspecting timelines, and starting the daemon.
+You'll see commands for running agents, managing fleets, working with models, inspecting sessions, and starting the daemon.
 
 ## Next Steps
 
