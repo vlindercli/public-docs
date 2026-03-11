@@ -6,17 +6,32 @@ Manage and run agents.
 
 ### `vlinder agent run`
 
-Run an agent interactively.
+Run a deployed agent interactively.
 
 ```
-vlinder agent run [OPTIONS]
+vlinder agent run <NAME> [OPTIONS]
+```
+
+| Argument / Option | Description |
+|-------------------|-------------|
+| `NAME` | Name of the deployed agent |
+| `--branch` | Optional timeline branch to resume from |
+
+Starts an interactive REPL session with the named agent. The agent must already be deployed (see `vlinder agent deploy`).
+
+### `vlinder agent deploy`
+
+Deploy an agent manifest to the registry.
+
+```
+vlinder agent deploy [OPTIONS]
 ```
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `-p`, `--path` | `.` (current directory) | Path to the directory containing `agent.toml` |
+| `-p`, `--path` | current directory | Path to the directory containing `agent.toml` |
 
-The agent manifest (`agent.toml`) is loaded from the specified path, validated against the registry (checking that required models, services, and runtimes are available), and then executed in an interactive REPL session.
+Loads the agent manifest, validates requirements against the registry (models, services, runtimes), and registers the agent.
 
 ### `vlinder agent list`
 
@@ -26,7 +41,7 @@ List all deployed agents.
 vlinder agent list
 ```
 
-Displays a table of agents registered with the registry, showing their name, runtime, and current status.
+Displays agents registered with the registry, showing their name, runtime, and status.
 
 ### `vlinder agent get`
 
@@ -39,8 +54,6 @@ vlinder agent get <NAME>
 | Argument | Description |
 |----------|-------------|
 | `NAME` | Name of the agent to inspect |
-
-Displays the full agent configuration including its resource ID, runtime, requirements, mounted services, and storage configuration.
 
 ### `vlinder agent new`
 
@@ -55,24 +68,25 @@ vlinder agent new <LANGUAGE> <NAME>
 | `LANGUAGE` | Template language (see table below) |
 | `NAME` | Agent name (becomes the directory name and `agent.toml` name) |
 
-Creates a `<NAME>/` directory containing a ready-to-build agent project: `agent.toml`, source file, `Dockerfile`, `build.sh`, and `README.md`. The template includes bridge helper functions for every platform service.
+Creates a `<NAME>/` directory containing a ready-to-build agent project: `agent.toml`, source file, `Dockerfile`, `build.sh`, and `README.md`.
 
 **Available templates:**
 
-| Language | Value | Template repo |
-|----------|-------|---------------|
-| Python | `python` | [vlindercli/vlinder-agent-python](https://github.com/vlindercli/vlinder-agent-python) |
-| Go | `golang` | [vlindercli/vlinder-agent-golang](https://github.com/vlindercli/vlinder-agent-golang) |
-| JavaScript | `js` | [vlindercli/vlinder-agent-js](https://github.com/vlindercli/vlinder-agent-js) |
-| TypeScript | `ts` | [vlindercli/vlinder-agent-ts](https://github.com/vlindercli/vlinder-agent-ts) |
-| Java | `java` | [vlindercli/vlinder-agent-java](https://github.com/vlindercli/vlinder-agent-java) |
-| .NET | `dotnet` | [vlindercli/vlinder-agent-dotnet](https://github.com/vlindercli/vlinder-agent-dotnet) |
+| Language | Value |
+|----------|-------|
+| Python | `python` |
+| Go | `golang` |
+| JavaScript | `js` |
+| TypeScript | `ts` |
+| Java | `java` |
+| .NET | `dotnet` |
 
 ```bash
 vlinder agent new python my-agent
 cd my-agent
 ./build.sh
-vlinder agent run
+vlinder agent deploy
+vlinder agent run my-agent
 ```
 
 ## See Also
