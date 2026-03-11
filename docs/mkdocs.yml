@@ -118,6 +118,7 @@ nav:
     - Storage Model: explanation/storage-model.md
     - State Store: explanation/state-store.md
     - Conversations Repository: explanation/conversations-repo.md
+    - Time Travel: explanation/time-travel.md
     - Domain Model: explanation/domain-model.md
   - Reference:
     - reference/index.md
@@ -126,7 +127,9 @@ nav:
       - vlinder agent: reference/cli/agent.md
       - vlinder fleet: reference/cli/fleet.md
       - vlinder model: reference/cli/model.md
-      - vlinder timeline: reference/cli/timeline.md
+      - vlinder session: reference/cli/session.md
+      - vlinder turn: reference/cli/turn.md
+      - vlinder secret: reference/cli/secret.md
       - vlinder daemon: reference/cli/daemon.md
     - Configuration:
       - agent.toml: reference/agent-toml.md

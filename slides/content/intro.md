@@ -1,14 +1,14 @@
 # VlinderCLI
 
-**AI agents that can time travel.**
+**Debug and repair AI agents.**
 
 ---
 
 ## What is VlinderCLI?
 
-Design, build, run, and observe AI agents.
+Infrastructure to debug and repair AI agent failures.
 
-Debug with time-travel. Scale seamlessly from laptop to cluster.
+Rewind to the failure, inspect the exact state, test a fix, and replay.
 
 ---
 
@@ -16,8 +16,8 @@ Debug with time-travel. Scale seamlessly from laptop to cluster.
 
 - **Agents** — self-contained AI units running in OCI containers
 - **Fleets** — groups of cooperating agents with delegation
-- **Timelines** — git-backed Merkle DAG for verifiable history
-- **Time-Travel Debugging** — checkout, repair, promote
+- **Sessions** — independent Merkle chains with content-addressed history
+- **Time-Travel Debugging** — rewind, fork, fix, promote
 
 ---
 
@@ -36,8 +36,7 @@ Every component communicates through typed messages over NATS.
 | Registry | Source of truth (gRPC) |
 | Agent | OCI container execution |
 | Inference | LLM text generation |
-| Embedding | Vector embeddings |
-| Storage | Object + vector (SQLite) |
+| Storage | Object + vector |
 
 -v-
 
@@ -53,13 +52,13 @@ Every component communicates through typed messages over NATS.
 ## Time-Travel Debugging
 
 ```text
-$ vlinder timeline log
-$ vlinder timeline checkout b3c4d5e
-$ vlinder timeline repair -p agents/todoapp
-$ vlinder timeline promote
+$ vlinder session list todoapp
+$ vlinder session fork ses-abc --from a1b2c3d4 --name fix
+$ vlinder agent run todoapp --branch fix
+$ vlinder session promote fix
 ```
 
-Fork from any point. Nothing is deleted.
+Rewind to any completed turn. Fork. Fix. Promote.
 
 ---
 
