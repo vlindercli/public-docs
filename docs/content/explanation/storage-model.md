@@ -17,7 +17,7 @@ Agents access storage through the message queue, not by linking a storage librar
 
 ## Content Addressing
 
-Storage operations produce content hashes that feed into the Merkle DAG. When you fork or repair a timeline, the storage state is part of what gets restored. This is what makes time-travel debugging work for stateful agents — you can rewind to a previous state and the storage contents match.
+Storage operations produce content hashes that feed into the Merkle DAG. When you fork a timeline, the storage state is part of what gets restored. This is what makes time travel work for stateful agents — you can rewind to a previous turn and the storage contents match.
 
 The mechanism behind this is the [State Store](state-store.md) — a content-addressed, append-only store that uses the same object model as git (values, snapshots, commits). Every `kv_put` creates a new state commit rather than overwriting data. The state commit hash is recorded on the `CompleteMessage`'s `state` field. Because old values are never deleted, any historical state can be read by pointing at its state commit hash.
 
