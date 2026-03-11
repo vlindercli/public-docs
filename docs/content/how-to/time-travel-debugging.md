@@ -1,116 +1,94 @@
 # Time-Travel Debugging
 
-VlinderCLI records every agent interaction as a commit in a git-based timeline. This enables you to inspect history, travel back to any point, repair from there, and promote the fixed timeline to main.
+VlinderCLI records every agent interaction as a node in a content-addressed DAG. This enables you to inspect history, rewind to any completed turn, fork a new timeline, and continue from there.
 
-## View the Timeline
+## View Session History
 
-Show the full system timeline:
-
-```bash
-vlinder timeline log
-```
-
-Filter to a specific agent:
+List sessions for an agent:
 
 ```bash
-vlinder timeline log --agent echo-agent
+vlinder session list my-agent
 ```
 
-Each entry shows the commit SHA, timestamp, agent name, and submission summary.
-
-## Inspect a Submission
-
-To see every message in a single submission (invoke, requests, responses, complete), use `route` with the session ID:
+Inspect a specific session's turns and messages:
 
 ```bash
-vlinder timeline route ses-abc12345
+vlinder session get ses-abc12345
 ```
 
-This shows all commits for that session in chronological order — useful for understanding exactly what happened during a turn.
+## Inspect a Turn
 
-## Travel Back to a Known-Good Point
-
-Identify the commit you want to return to using `timeline log`, then checkout:
+To see every message in a single turn (invoke, requests, responses, complete):
 
 ```bash
-vlinder timeline checkout b3c4d5e
+vlinder turn get sub-001
 ```
 
-This moves HEAD to that commit (detached) and prints the Session, Submission, and State trailers so you can confirm you're at the right point.
+This shows all DAG nodes belonging to the submission in order — useful for understanding exactly what happened during a turn.
 
-## Repair and Continue
+## Fork from a Known-Good Point
 
-Once you've checked out a known-good commit, create a repair branch and re-enter the REPL:
+Identify the DAG node hash you want to rewind to using `vlinder session get`, then fork:
 
 ```bash
-vlinder timeline repair -p agents/todoapp
+vlinder session fork ses-abc12345 --from a1b2c3d4 --name fix-typo
 ```
 
-This:
+This creates a new timeline branch called `fix-typo`, restoring agent state to that point.
 
-1. Creates a `repair-YYYY-MM-DD` branch from the current detached HEAD
-2. Restores the agent's state from the `State:` trailer on that commit
-3. Deploys the agent and enters the REPL
+## Continue on the Forked Timeline
 
-You can now continue the conversation from the historical point, taking a different path.
-
-## Promote the Repaired Timeline
-
-After verifying the repair branch works correctly, make it the new main:
+Run the agent on the forked branch:
 
 ```bash
-vlinder timeline promote
+vlinder agent run my-agent --branch fix-typo
 ```
 
-This labels the old `main` as `broken-YYYY-MM-DD` (nothing is deleted), moves `main` to the current HEAD, and switches to `main`.
+You're now in the REPL at the historical state. Continue the conversation, taking a different path.
+
+## Promote the Fixed Timeline
+
+After verifying the forked branch works correctly, promote it:
+
+```bash
+vlinder session promote fix-typo
+```
+
+This seals the old timeline (relabeled as `broken-YYYY-MM-DD`) and makes the forked branch the active one. Nothing is deleted — the old timeline is preserved.
 
 ## Workflow Example
 
 ```bash
 # 1. Run your agent
-vlinder agent run -p agents/todoapp
+vlinder agent run todoapp
 
-# 2. Check the timeline (filter to high-level view)
-vlinder timeline log --oneline --grep="^invoke:" --grep="^complete:"
+# 2. Something goes wrong — inspect the session
+vlinder session list todoapp
+vlinder session get wired-pig-543e
 
-# 3. Checkout the last good point
-vlinder timeline checkout b3c4d5e
-# At: complete: todoapp → cli
-# Session:    ses-abc12345
-# Submission: sub-003
-# State:      a1b2c3d4...
-#
-# Use 'vlinder timeline repair' to re-execute from this point.
+# 3. Find the last good turn and fork
+vlinder session fork wired-pig-543e --from a1b2c3d4 --name fix-2026-03-11
 
-# 4. Repair — branch off and re-execute
-vlinder timeline repair -p agents/todoapp
-# Created branch 'repair-2026-02-13' from b3c4d5e
-# Session:    ses-abc12345
-# Submission: sub-003
-# State:      a1b2c3d4...
-# Restoring state a1b2c3d4…
-#
-# vlinder> (you're now in the REPL at the historical state)
+# 4. Run the agent on the forked branch
+vlinder agent run todoapp --branch fix-2026-03-11
 
-# 5. Promote the repair branch to main
-vlinder timeline promote
-# Old main labeled as 'broken-2026-02-13'.
-# Promoted 'repair-2026-02-13' to main.
+# 5. Promote the fixed timeline
+vlinder session promote fix-2026-03-11
 ```
 
 ## How It Works
 
-- Conversations are stored in `~/.vlinder/conversations/` as a git repository
-- Each message (invoke, response, complete) becomes a git commit with trailers: `Session`, `Submission`, and `State`
-- The `State:` trailer records the agent's state hash at that point — this is what enables state restoration during repair
-- Checkout detaches HEAD; repair creates a branch and restores state from the trailer
-- Promote relabels branches — nothing is deleted, both timelines are preserved
+- Every message (invoke, request, response, complete) is recorded as a node in a content-addressed Merkle DAG stored in SQL
+- Each completed turn produces a state hash — the agent's exact state at that point
+- Forking creates a new timeline branch, restoring the agent's state from the DAG
+- The conversations git repo at `~/.vlinder/conversations/` provides a read-only projection for browsing with standard git tools
 
-For the full design, see [Timelines (Explanation)](../explanation/timelines.md).
+For the full design, see [Time Travel](../explanation/time-travel.md) and [Timelines](../explanation/timelines.md).
 
 ## See Also
 
-- [CLI: `vlinder timeline`](../reference/cli/timeline.md) — command reference
-- [Timelines](../explanation/timelines.md) — versioned state and content addressing
-- [Conversations Repository](../explanation/conversations-repo.md) — git commit structure and accumulated tree model
-- [Observability](observability.md) — inspecting logs alongside timelines
+- [CLI: `vlinder session`](../reference/cli/session.md) — command reference
+- [CLI: `vlinder turn`](../reference/cli/turn.md) — turn inspection
+- [Time Travel](../explanation/time-travel.md) — rewind, fork, continue model
+- [Timelines](../explanation/timelines.md) — Merkle DAG and content addressing
+- [Observability](observability.md) — inspecting logs alongside sessions
