@@ -73,13 +73,13 @@ git diff a1b2c3d..789abcd
 
 ## Forking in the Projection
 
-When the platform forks a timeline (via `vlinder session fork`), the DAG Git worker creates a corresponding git branch. This means repair branches are visible in the git projection too — `git branch` shows all timelines, and `git log` on each branch shows the divergent history.
+When the platform forks a timeline (via `vlinder session fork`), the DAG Git worker creates a corresponding git branch. This means forked timelines are visible in the git projection too — `git branch` shows all timelines, and `git log` on each branch shows the divergent history.
 
 Both branches share commits before the fork point, so the storage cost is minimal.
 
 ## See Also
 
-- [Timelines](timelines.md) — the Merkle DAG model and repair workflow
+- [Timelines](timelines.md) — the Merkle DAG model and forking
 - [State Store](state-store.md) — the versioned store that state hashes point into
 - [Conversations Repository reference](../reference/conversations-repo.md) — commit format details
-- [Time-Travel Debugging](../how-to/time-travel-debugging.md) — practical repair workflows
+- [Time-Travel Debugging](../how-to/time-travel-debugging.md) — practical workflows
