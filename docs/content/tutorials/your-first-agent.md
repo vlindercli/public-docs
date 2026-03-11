@@ -4,7 +4,7 @@ In this tutorial, you'll scaffold a new agent from a template, explore the gener
 
 **Time:** ~10 minutes
 
-**Prerequisites:** [Development setup](../develop.md) complete. Podman and Ollama running.
+**Prerequisites:** [Getting Started](getting-started.md) complete. Podman and Ollama running.
 
 ## Step 1: Scaffold the Agent
 
@@ -42,21 +42,22 @@ runtime = "container"
 executable = "localhost/my-agent:latest"
 object_storage = "sqlite://data/objects.db"
 
-[requirements]
-services = ["infer", "kv"]
-
 [requirements.models]
-phi3 = "ollama://localhost:11434/phi3:latest"
+phi3 = "phi3"
+
+[requirements.services.infer]
+provider = "ollama"
+protocol = "openai"
 ```
 
 Key fields:
 
 - **`name`** — identifies the agent in the registry
-- **`runtime`** — always `"container"` (agents run as OCI containers)
+- **`runtime`** — execution runtime (`"container"` for OCI containers via Podman)
 - **`executable`** — the container image reference
-- **`object_storage`** — SQLite-backed key-value storage for persisting data
-- **`requirements.services`** — platform services the agent uses (`infer` for LLM, `kv` for storage)
-- **`requirements.models`** — maps model aliases to Ollama endpoints
+- **`object_storage`** — key-value storage for persisting data
+- **`requirements.models`** — maps model aliases to registry names
+- **`requirements.services`** — declares which platform services and providers the agent uses
 
 ## Step 3: Explore the Agent Code
 
@@ -68,10 +69,10 @@ The template includes a **bridge helper library** — one function per platform 
 |----------|----------|-------------|
 | `infer(prompt, max_tokens)` | `/infer` | LLM completion |
 | `embed(text)` | `/embed` | Text embedding |
-| `kv_get(path)` | `/kv/get` | Read from storage |
-| `kv_put(path, content)` | `/kv/put` | Write to storage (base64) |
+| `kv_get(key)` | `/kv/get` | Read from storage |
+| `kv_put(key, content)` | `/kv/put` | Write to storage (base64) |
 | `kv_list(prefix)` | `/kv/list` | List storage keys |
-| `kv_delete(path)` | `/kv/delete` | Delete from storage |
+| `kv_delete(key)` | `/kv/delete` | Delete from storage |
 | `vector_store(key, vector, metadata)` | `/vector/store` | Store vector |
 | `vector_search(vector, limit)` | `/vector/search` | Search vectors |
 | `vector_delete(key)` | `/vector/delete` | Delete vector |
@@ -94,10 +95,11 @@ The template's main logic:
 
 This runs `podman build` to create the container image at `localhost/my-agent:latest`.
 
-## Step 5: Run the Agent
+## Step 5: Deploy and Run the Agent
 
 ```bash
-vlinder agent run
+vlinder agent deploy
+vlinder agent run my-agent
 ```
 
 Vlinder loads `agent.toml`, validates that `phi3` is available via Ollama, starts the container, and opens an interactive REPL.
@@ -115,34 +117,34 @@ You're Alice!
 The shortest war in recorded history lasted 38 minutes, between Britain and Zanzibar in 1896.
 ```
 
-## Step 6: Verify the Timeline
+## Step 6: Inspect the Session
 
 After running your agent, check that interactions were recorded:
 
 ```bash
-vlinder timeline log --agent my-agent
+vlinder session list my-agent
 ```
 
-Every conversation turn is stored in a git-backed timeline, enabling [time-travel debugging](../how-to/time-travel-debugging.md).
+Every conversation turn is stored in a content-addressed DAG, enabling [time-travel debugging](../how-to/time-travel-debugging.md).
 
 ## Step 7: Make It Your Own
 
 1. Edit the source file — change the message handler to implement your logic
 2. Update `agent.toml` — change the name, description, models, and services
 3. Rebuild with `./build.sh`
-4. Run again with `vlinder agent run`
+4. Deploy and run again
 
 ## What You Learned
 
 - How to scaffold a new agent with `vlinder agent new`
 - The structure of an [`agent.toml`](../reference/agent-toml.md) manifest
 - How agents communicate with platform services via bridge helpers
-- How to build and run an agent container
-- How interactions are recorded in the timeline
+- How to build, deploy, and run an agent container
+- How interactions are recorded for time-travel debugging
 
 ## Next Steps
 
 - [Your First Fleet](your-first-fleet.md) — compose agents into a fleet with delegation
-- [Storage](../how-to/storage.md) — advanced storage patterns
+- [Storage](../how-to/storage.md) — storage patterns
 - [Services reference](../reference/services.md) — all available platform services
 - [agent.toml reference](../reference/agent-toml.md) — full field reference
