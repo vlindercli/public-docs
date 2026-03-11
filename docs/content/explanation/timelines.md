@@ -35,8 +35,8 @@ gitGraph
     commit id: "submit-1"
     commit id: "submit-2"
     commit id: "submit-3"
-    branch repair-2026-02-13
-    checkout repair-2026-02-13
+    branch fix-2026-02-13
+    checkout fix-2026-02-13
     commit id: "submit-2b"
     commit id: "submit-3b"
 ```
@@ -45,27 +45,20 @@ After forking from `submit-2`, new submissions create a divergent path. The orig
 
 Fork sends a `ForkMessage` through the queue, so all DAG projections react to it.
 
-## Repair
+## Time Travel Workflow
 
-**Repair** is the operational pattern for time-travel debugging: identify a failure in a session, fork from the failure point, replay the failed service call, and continue.
+See [Time Travel](time-travel.md) for the full explanation. The short version:
 
-The workflow uses `vlinder session` commands:
-
-1. `vlinder session list <agent>` — find the session
-2. `vlinder session get <session-id>` — browse turns and messages, identify the failed request by its canonical hash
-3. `vlinder session fork <session-id> --from <hash> --name <branch>` — create a named timeline from the failure point
-4. `vlinder session repair <branch>` — replay the failed service call via the agent's checkpoint handler
-5. `vlinder session promote <branch>` — seal the old timeline, make the repaired branch canonical
-
-The branch name ties fork, repair, and promote together. Multiple forks of the same session can exist independently.
-
-Repair relies on two things: the `state` field on the DAG node (so the platform knows what state to restore) and the checkpoint name (so the platform knows where to deliver the replayed response). Without checkpoints, the only option from a mid-execution failure is to re-invoke from the last complete point.
+1. `vlinder session get <session-id>` — browse turns, identify where things went wrong
+2. `vlinder session fork <session-id> --from <hash> --name <branch>` — create a timeline from a known-good turn
+3. Continue the conversation on the new timeline
+4. `vlinder session promote <branch>` — seal the old timeline, make the new one canonical
 
 ## Promote
 
-After a successful repair, **promote** makes the repair timeline canonical. It answers the question: "which timeline is the real one?"
+After a successful fix, **promote** makes the new timeline canonical. It answers the question: "which timeline is the real one?"
 
-Promote seals the old timeline and relabels it as `broken-YYYY-MM-DD` — nothing is deleted. The repaired branch becomes `main`. Both timelines continue to exist. The `broken-` timeline preserves the original (erroneous) history for auditing or further inspection.
+Promote seals the old timeline and relabels it as `broken-YYYY-MM-DD` — nothing is deleted. The new branch becomes `main`. Both timelines continue to exist. The `broken-` timeline preserves the original history for auditing.
 
 Because the DAG is content-addressed, timelines that share history before the fork point share the underlying nodes — no data is copied.
 
@@ -77,6 +70,7 @@ VlinderCLI stores the authoritative Merkle DAG in its DAG store. The [Conversati
 
 ## See Also
 
+- [Time Travel](time-travel.md) — rewind, fork, and continue
 - [Time-Travel Debugging](../how-to/time-travel-debugging.md) — practical workflows
 - [State Store](state-store.md) — the versioned store that state hashes point into
 - [Storage Model](storage-model.md) — how storage integrates with content addressing
