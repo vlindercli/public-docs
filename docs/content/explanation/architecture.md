@@ -1,6 +1,6 @@
 # Architecture
 
-When an AI agent fails, you need to rewind to the failure, understand what happened, and repair it. That requires capturing every decision the agent made — every inference call, every storage write, every delegation — as an immutable, content-addressed record.
+When an AI agent fails, you need to rewind to the failure, understand what happened, and try again. That requires capturing every decision the agent made — every inference call, every storage write, every delegation — as an immutable, content-addressed record.
 
 VlinderCLI's architecture is shaped by this requirement. Every component communicates through typed messages over a NATS queue. Every message is recorded as a node in a content-addressed DAG. Because the full history is preserved and every state is addressable, the platform can rewind to any point, fork a timeline, and replay from there.
 
@@ -148,7 +148,7 @@ sequenceDiagram
 
 ## Storage
 
-Rewind and repair only work if the platform can resolve the agent's exact state at any point in its history. This is why all state is content-addressed and append-only — nothing is overwritten, so every historical state remains addressable.
+Rewind and fork only work if the platform can resolve the agent's exact state at any point in its history. This is why all state is content-addressed and append-only — nothing is overwritten, so every historical state remains addressable.
 
 The primary store is the **State Store** — a content-addressed, append-only SQL database that records every message as a DAG node and every agent state transition as a versioned snapshot. Given any point in the agent's history, the platform can resolve the exact KV state, inference calls, and delegation results at that moment.
 
