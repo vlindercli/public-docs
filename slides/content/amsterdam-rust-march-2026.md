@@ -216,4 +216,6 @@ To time travel:<br><br>
 
 <img src="logo.png" alt="VlinderCLI" style="max-height: 200px; border: none; box-shadow: none; display: block; margin: 0 auto;">
 
-[github.com/vlindercli/vlindercli](https://github.com/vlindercli/vlindercli)
+[vlindercli.dev](https://vlindercli.dev) | [docs](https://docs.vlindercli.dev) | [blog](https://blog.vlindercli.dev) | [slides](https://slides.vlindercli.dev)
+
+[github.com/vlindercli/vlindercli](https://github.com/vlindercli/vlindercli) | [discord](https://discord.vlindercli.dev)
