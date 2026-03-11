@@ -15,7 +15,7 @@ vlinder model add <NAME> [OPTIONS]
 | Argument / Option | Default | Description |
 |-------------------|---------|-------------|
 | `NAME` | *required* | Name of the model to add |
-| `--catalog` | — | Catalog to pull from (e.g., `ollama`) |
+| `--catalog` | `ollama` | Catalog to pull from |
 | `--endpoint` | — | Custom endpoint URL for the model provider |
 
 Resolves the model from the specified catalog, registers it with the registry, and creates a model manifest file at `~/.vlinder/models/<name>-model.toml`.
@@ -31,7 +31,7 @@ vlinder model available [FILTER] [OPTIONS]
 | Argument / Option | Default | Description |
 |-------------------|---------|-------------|
 | `FILTER` | — | Optional substring to filter model names |
-| `--catalog` | — | Catalog to query |
+| `--catalog` | `all` | Catalog to query |
 | `--endpoint` | — | Custom endpoint URL |
 
 Queries the catalog API and displays available models.
@@ -44,7 +44,7 @@ List models registered locally.
 vlinder model list
 ```
 
-Displays all models registered with the registry, showing name, type (`inference` or `embedding`), engine, and content digest.
+Displays all models registered with the registry, showing name, type (`inference` or `embedding`), and provider.
 
 ### `vlinder model remove`
 
