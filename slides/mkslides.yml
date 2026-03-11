@@ -1,0 +1,15 @@
+index:
+  title: VlinderCLI Presentations
+  favicon: null
+
+slides:
+  theme: theme.css
+  highlight_theme: monokai
+  separator: "^\\s*---\\s*$"
+  separator_vertical: "^\\s*-v-\\s*$"
+  separator_notes: "^Notes?:"
+
+revealjs:
+  hash: true
+  slideNumber: c/t
+  history: true

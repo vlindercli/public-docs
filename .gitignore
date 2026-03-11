@@ -1,5 +1,8 @@
-# Built site
-site/
+# Built sites (each sub-project)
+landing/site/
+docs/site/
+blog/site/
+slides/site/
 
 # Python
 venv/
