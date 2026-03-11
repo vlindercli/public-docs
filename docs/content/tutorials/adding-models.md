@@ -21,15 +21,11 @@ VlinderCLI supports two model catalogs:
 | **Ollama** | Locally on your machine | Free | Development, privacy, offline work |
 | **OpenRouter** | Cloud API | Pay per token | Larger models, production quality |
 
-The installer already set up Ollama and registered `phi3`. In this tutorial you'll add more models from both sources.
-
 ## Step 1: See What You Have
 
 ```bash
 vlinder model list
 ```
-
-You should see `phi3` registered from the install step.
 
 ## Step 2: Browse Available Models
 
@@ -55,19 +51,11 @@ Browse cloud models via OpenRouter:
 vlinder model available --catalog openrouter
 ```
 
-!!! note
-    OpenRouter requires an API key. Set it before browsing:
+OpenRouter requires an API key:
 
-    ```bash
-    export VLINDER_OPENROUTER_API_KEY=sk-or-...
-    ```
-
-    Or add it to `~/.vlinder/config.toml`:
-
-    ```toml
-    [openrouter]
-    api_key = "sk-or-..."
-    ```
+```bash
+export VLINDER_OPENROUTER_API_KEY=sk-or-...
+```
 
 ## Step 3: Add an Ollama Model
 
@@ -102,17 +90,15 @@ Open your agent's `agent.toml` and add the new model to the requirements:
 
 ```toml title="agent.toml"
 [requirements.models]
-phi3 = "ollama://localhost:11434/phi3:latest"
-llama3 = "ollama://localhost:11434/llama3:latest"
+phi3 = "phi3"
+llama3 = "llama3"
 ```
 
-Your agent code can now call `infer()` with either model. The model alias (left side) is what your agent uses; the URI (right side) tells Vlinder where to route the request.
-
-For OpenRouter models, the URI uses the `openrouter://` scheme:
+The key (left side) is the alias your agent code uses. The value (right side) is the model's registry name. For simple cases where the alias matches the name, you can use the array form:
 
 ```toml
-[requirements.models]
-llama-3-8b = "openrouter://openrouter.ai/llama-3-8b"
+[requirements]
+models = ["phi3", "llama3"]
 ```
 
 ## Step 6: Remove a Model
@@ -128,7 +114,7 @@ This deregisters the model from Vlinder. It doesn't delete the Ollama model from
 - VlinderCLI has two model catalogs: Ollama (local) and OpenRouter (cloud)
 - How to browse available models with `vlinder model available`
 - How to add and remove models with `vlinder model add` and `vlinder model remove`
-- How to reference models in `agent.toml` using `ollama://` and `openrouter://` URIs
+- How to reference models in `agent.toml` by registry name
 
 ## Next Steps
 
