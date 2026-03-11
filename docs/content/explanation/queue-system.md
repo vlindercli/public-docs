@@ -1,16 +1,16 @@
 # Queue System
 
-Every decision an agent makes — every inference call, storage write, and delegation — flows through a message queue as a typed message. This is what makes time travel possible: because the queue is the single communication layer, the platform can record, replay, and repair any interaction without agent cooperation.
+Every decision an agent makes — every inference call, storage write, and delegation — flows through a message queue as a typed message. This is what makes time travel possible: because the queue is the single communication layer, the platform can record and replay any interaction without agent cooperation.
 
 ## Why Queues?
 
 Queues decouple producers from consumers. An agent doesn't know whether inference runs locally via Ollama or remotely via OpenRouter — it sends a typed message and gets a typed response. This abstraction lets VlinderCLI scale from a single process to a distributed cluster without modifying agent code.
 
-More importantly, queues make the platform's rewind and repair capabilities possible. Because every interaction is a discrete message, the platform can intercept, record, and replay any of them.
+More importantly, queues make the platform's rewind and fork capabilities possible. Because every interaction is a discrete message, the platform can intercept, record, and replay any of them.
 
 ## Message Types
 
-The protocol defines seven typed messages:
+The protocol defines six typed messages:
 
 | Message | Direction | Purpose |
 |---------|-----------|---------|
@@ -19,7 +19,6 @@ The protocol defines seven typed messages:
 | `ResponseMessage` | Service → Runtime | Service returns result to agent |
 | `CompleteMessage` | Runtime → Harness | Agent finishes (includes result and state hash) |
 | `DelegateMessage` | Agent → Agent | Fleet delegation — route sub-task to another agent |
-| `RepairMessage` | Platform → Sidecar | Replay a failed service call with corrected state |
 | `ForkMessage` | CLI → Platform | Create a timeline branch in the DAG |
 
 Each message carries enough dimensions to be routed without ambiguity — see [Routing Keys](#routing-keys) below.
@@ -59,25 +58,6 @@ sequenceDiagram
     Q->>E: DelegateReply
 ```
 
-A repair replays a failed service call:
-
-```mermaid
-sequenceDiagram
-    participant H as Harness
-    participant Q as Queue
-    participant S as Sidecar
-    participant W as Service Worker
-
-    H->>Q: RepairMessage
-    Q->>S: RepairMessage
-    S->>Q: RequestMessage (replayed)
-    Q->>W: RequestMessage
-    W->>Q: ResponseMessage
-    Q->>S: ResponseMessage
-    S->>Q: CompleteMessage
-    Q->>H: CompleteMessage
-```
-
 ## Routing Keys
 
 Messages are routed using `RoutingKey` — a structural enum that encodes the message direction and all routing dimensions. Collision-freedom is structural: two routing keys are equal if and only if every dimension matches.
@@ -92,7 +72,6 @@ Each variant carries the dimensions needed for unambiguous delivery:
 | `Response` | timeline, submission, service, agent, operation, sequence | Service worker → agent |
 | `Delegate` | timeline, submission, caller, target | Agent → agent |
 | `DelegateReply` | timeline, submission, caller, target, nonce | Agent → agent (reply) |
-| `Repair` | timeline, submission, harness, agent | Platform → sidecar |
 | `Fork` | timeline, submission, agent_name | CLI → platform |
 
 Every request variant deterministically maps to its reply variant. `Invoke` → `Complete`, `Request` → `Response`, `Delegate` → `DelegateReply`. Reply variants have no further replies — hops are one level deep.
@@ -115,7 +94,6 @@ vlinder.{timeline}.{submission}.{type}.{...dimensions}
 | Response | `vlinder.{timeline}.{submission}.res.{svc}.{backend}.{agent}.{op}.{seq}` |
 | Delegate | `vlinder.{timeline}.{submission}.delegate.{caller}.{target}` |
 | DelegateReply | `vlinder.{timeline}.{submission}.delegate-reply.{caller}.{target}.{nonce}` |
-| Repair | `vlinder.{timeline}.{submission}.repair.{harness}.{agent}` |
 | Fork | `vlinder.{timeline}.{submission}.fork.{agent_name}` |
 
 Workers subscribe to wildcard patterns that match their role. For example, an inference-ollama worker subscribes to `vlinder.*.*.req.*.infer.ollama.>` to receive all Ollama inference requests regardless of timeline, submission, or agent.
@@ -128,7 +106,6 @@ The `MessageQueue` trait provides convenience methods that combine send + receiv
 |--------|-------|-------------|
 | `run_agent` | `InvokeMessage` | `CompleteMessage` |
 | `call_service` | `RequestMessage` | `ResponseMessage` |
-| `repair_agent` | `RepairMessage` | `CompleteMessage` |
 
 These are used by the harness and sidecar to simplify the common request-reply pattern.
 
