@@ -55,7 +55,9 @@ extra:
             <a href="https://github.com/vlindercli/vlinder/issues/new?title=[docs]+{title}+-+{url}" target="_blank" rel="noopener">opening an issue</a>.
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/vlindercli/vlinder
+      link: https://github.com/vlindercli/vlindercli
+    - icon: fontawesome/brands/discord
+      link: https://discord.vlindercli.dev/
 
 markdown_extensions:
   - admonition
@@ -141,3 +143,4 @@ nav:
     - Services: reference/services.md
   - Blog: https://blog.vlindercli.dev/
   - Slides: https://slides.vlindercli.dev/
+  - Discord: https://discord.vlindercli.dev/
