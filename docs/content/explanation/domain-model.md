@@ -2,7 +2,7 @@
 
 VlinderCLI's domain model is the set of types and traits that define the protocol. Everything — messages, routing, storage, execution — is expressed as domain types. Infrastructure (NATS, Podman, SQL) implements these traits but never leaks into the protocol.
 
-This separation is what makes time travel possible: because every operation flows through typed traits, the platform can record, replay, and repair any interaction without agent cooperation.
+This separation is what makes time travel possible: because every operation flows through typed traits, the platform can record and replay any interaction without agent cooperation.
 
 ## Core Types
 
@@ -14,7 +14,7 @@ This separation is what makes time travel possible: because every operation flow
 | `AgentId` | Agent name used for queue routing | `echo-agent` |
 | `SessionId` | Conversation grouping | `ses-{uuid}` |
 | `SubmissionId` | Content-addressed hash of a user request | `SHA-256(payload \|\| session \|\| parent)` |
-| `TimelineId` | Branch identifier for timeline-scoped messaging | `main`, `repair-2026-03-11` |
+| `TimelineId` | Branch identifier for timeline-scoped messaging | `main`, `fix-2026-03-11` |
 | `Sequence` | Ordering of service interactions within a submission | `0`, `1`, `2` |
 
 `SubmissionId` is deterministic — the same input, session, and parent always produce the same hash. This enables replay: given the same inputs, the submission chain is identical.
@@ -45,19 +45,18 @@ One node per message in the content-addressed DAG.
 |-------|-------------|
 | `hash` | `SHA-256(payload \|\| parent_hash \|\| message_type \|\| diagnostics \|\| session_id)` |
 | `parent_hash` | Previous node in the chain (empty for session roots) |
-| `message_type` | invoke, request, response, complete, delegate, repair, fork |
+| `message_type` | invoke, request, response, complete, delegate, fork |
 | `session_id` | Which conversation this belongs to |
 | `submission_id` | Which user request triggered this |
 | `payload` | Message content (base64-encoded bytes) |
 | `state` | Agent state hash at this point |
-| `checkpoint` | Checkpoint handler name (for repair) |
 | `operation` | Service operation (for request/response nodes) |
 
 ### RoutingKey
 
 Structural enum that encodes message direction and routing dimensions. Used by the queue to route messages to the correct consumer without string parsing.
 
-Variants: `Invoke`, `Request`, `Response`, `Complete`, `Delegate`, `DelegateReply`, `Repair`, `Fork`.
+Variants: `Invoke`, `Request`, `Response`, `Complete`, `Delegate`, `DelegateReply`, `Fork`.
 
 ### ServiceBackend and Operation
 
@@ -85,11 +84,9 @@ Abstract interface for all inter-component communication. Typed send/receive met
 | `send_response` / `receive_response` | Service → Runtime | Service returns result |
 | `send_complete` / `receive_complete` | Runtime → Harness | Agent finishes |
 | `send_delegate` / `receive_delegate` | Agent → Agent | Fleet delegation |
-| `send_repair` / `receive_repair` | Platform → Sidecar | Replay a failed service call |
 | `send_fork` | CLI → Platform | Create a timeline branch |
 | `run_agent` | Facade | Send invoke, block until complete |
 | `call_service` | Facade | Send request, block until response |
-| `repair_agent` | Facade | Send repair, block until complete |
 
 ### Registry
 
@@ -103,7 +100,7 @@ Storage layer beneath the Registry. Abstracts the database — implementations c
 
 API surface for external interaction. `CoreHarness` is the canonical implementation.
 
-Key operations: `run_agent`, `repair_agent`, `fork_timeline`, `start_session`, `set_timeline`, `set_initial_state`.
+Key operations: `run_agent`, `fork_timeline`, `start_session`, `set_timeline`, `set_initial_state`.
 
 The harness manages session state, Merkle-chained submissions (each submission parents the next), and timeline sealing (sealed timelines reject new invocations).
 
