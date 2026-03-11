@@ -1,44 +1,50 @@
 # Architecture
 
-VlinderCLI follows a protocol-first, queue-based architecture where every component communicates through typed messages over NATS. The Supervisor spawns isolated worker processes that each handle a specific service.
+When an AI agent fails, you need to rewind to the failure, understand what happened, and repair it. That requires capturing every decision the agent made — every inference call, every storage write, every delegation — as an immutable, content-addressed record.
+
+VlinderCLI's architecture is shaped by this requirement. Every component communicates through typed messages over a NATS queue. Every message is recorded as a node in a content-addressed DAG. Because the full history is preserved and every state is addressable, the platform can rewind to any point, fork a timeline, and replay from there.
 
 ## Component Overview
 
 ```mermaid
 flowchart TD
-    CLI["CLI / Harness"]
-    CLI --> NATS["NATS Queue"]
+    CLI["CLI"]
+    CLI --> Harness["Harness (gRPC)"]
+    Harness --> NATS["NATS Queue"]
 
     subgraph Supervisor
+        Secret["Secret Store"]
         Registry[("Registry")]
+        StateW["State Service"]
+        Catalog["Catalog Service"]
         Agent["Agent Worker"]
         Inference["Inference Worker"]
-        Embedding["Embedding Worker"]
         Object["Object Storage"]
         Vector["Vector Storage"]
-        State["State Service"]
+        DagGit["DAG Git Worker"]
+        SessionViewer["Session Viewer"]
     end
 
-    NATS --> Registry
     NATS --> Agent
     NATS --> Inference
-    NATS --> Embedding
     NATS --> Object
     NATS --> Vector
-    NATS --> State
+    NATS --> DagGit
 
-    Registry -.- Agent
-    Registry -.- Inference
-    Registry -.- Embedding
+    Harness -.- Registry
+    Agent -.- Registry
+    Inference -.- Registry
 
     subgraph Persistence
         Git["Conversations Repo (git)"]
-        StateDB[("State Store (SQLite)")]
+        StateDB[("State Store (SQL DB)")]
+        RegistryDB[("Registry (SQL DB)")]
     end
 
-    Object --> State
-    State --> StateDB
-    CLI --> Git
+    Registry --> RegistryDB
+    DagGit --> Git
+    Object --> StateW
+    StateW --> StateDB
     Git -. "State: trailer" .-> StateDB
 ```
 
@@ -46,9 +52,14 @@ flowchart TD
 
 The Supervisor is the process manager. It reads the worker configuration, spawns each worker as a child process, and monitors their lifecycle. It has no domain logic — it's purely concerned with starting, stopping, and restarting workers.
 
-The Supervisor starts the Registry worker first and waits for it to become healthy before spawning the remaining workers. This ensures all workers can connect to the registry on startup.
+The startup sequence is ordered by dependency:
 
-It also runs a Session Viewer HTTP server on port 7777 for inspecting conversation history.
+1. **Secret** — starts first. The registry needs secrets for agent identity (Ed25519 keys).
+2. **Registry** — starts next. All other workers connect to it via gRPC. The Supervisor waits for a health check before proceeding. If the registry fails to start within 10 seconds, the Supervisor aborts.
+3. **State** — gRPC server for DAG and state queries.
+4. **Catalog** — gRPC server for model catalog queries (Ollama, OpenRouter).
+5. **Harness** — gRPC bridge between CLI and daemon. The Supervisor waits for a health check before proceeding. If the harness fails to start within 10 seconds, the Supervisor aborts.
+6. **Remaining workers** — agent runtimes, inference, storage, DAG git, session viewer. These scale independently via config.
 
 ## Workers
 
@@ -58,14 +69,19 @@ Each worker is the same `vlinder daemon` binary, launched with a `VLINDER_WORKER
 
 | Worker | Role | Description |
 |--------|------|-------------|
+| Secret | `secret` | gRPC server for agent identity (Ed25519 key pairs) |
 | Registry | `registry` | gRPC server (port 9090). Source of truth for agents, models, jobs, and capabilities |
+| State | `state` | gRPC server for versioned agent state (DAG nodes, state commits) |
+| Catalog | `catalog` | gRPC server for model catalog queries (Ollama, OpenRouter) |
+| Harness | `harness` | gRPC bridge (port 9091) for CLI→daemon agent invocation |
 | Agent Container | `agent-container` | Executes OCI container agents via Podman |
+| Agent Lambda | `agent-lambda` | Executes agents as AWS Lambda functions |
 | Inference (Ollama) | `inference-ollama` | Local LLM inference via Ollama |
 | Inference (OpenRouter) | `inference-openrouter` | Cloud LLM inference via OpenRouter API |
-| Embedding (Ollama) | `embedding-ollama` | Vector embeddings via Ollama |
 | Object Storage | `storage-object-sqlite` | Key-value storage backed by SQLite |
 | Vector Storage | `storage-vector-sqlite` | Similarity search backed by sqlite-vec |
-| State | `state` | gRPC server for versioned agent state (DAG nodes, state commits) |
+| DAG Git | `dag-git` | Writes messages to the conversations git repo (singleton recommended) |
+| Session Viewer | `session-viewer` | HTTP server for browsing conversation history |
 
 ### Worker Configuration
 
@@ -74,17 +90,17 @@ Control how many instances of each worker to spawn:
 ```toml
 [distributed.workers]
 registry = 1
-state = 1
+harness = 1
+dag_git = 1
+session_viewer = 1
 
 [distributed.workers.agent]
 container = 1
+lambda = 0
 
 [distributed.workers.inference]
-ollama = 2
-openrouter = 1
-
-[distributed.workers.embedding]
 ollama = 1
+openrouter = 0
 
 [distributed.workers.storage.object]
 sqlite = 1
@@ -95,11 +111,12 @@ sqlite = 1
 
 Each worker type scales independently. Setting a count to 0 disables that worker type — useful for multi-node deployments where different nodes handle different services.
 
+
 ## Registry
 
 The Registry worker runs a gRPC server that acts as the source of truth for all system state — agents, models, jobs, runtimes, storage backends, and inference engines. All other workers are gRPC clients.
 
-Backed by SQLite for persistence. State survives restarts.
+Backed by a SQL database for persistence. State survives restarts.
 
 ## Message Flow
 
@@ -129,23 +146,23 @@ sequenceDiagram
 - **Registry-driven** — capability discovery happens via the registry, not configuration. Workers register what they support; agents declare what they need.
 - **Infrastructure-agnostic agents** — the same `agent.toml` works regardless of how workers are deployed.
 
-## Two-Store Model
+## Storage
 
-VlinderCLI uses two complementary stores that together enable time-travel debugging:
+Rewind and repair only work if the platform can resolve the agent's exact state at any point in its history. This is why all state is content-addressed and append-only — nothing is overwritten, so every historical state remains addressable.
+
+The primary store is the **State Store** — a content-addressed, append-only SQL database that records every message as a DAG node and every agent state transition as a versioned snapshot. Given any point in the agent's history, the platform can resolve the exact KV state, inference calls, and delegation results at that moment.
 
 | Store | Backend | What it records | Location |
 |-------|---------|----------------|----------|
-| [Conversations Repository](conversations-repo.md) | Git | Every message (invoke, complete) as a commit | `~/.vlinder/conversations/` |
-| [State Store](state-store.md) | SQLite | Versioned KV state (values, snapshots, state commits) | Sibling of agent's `data.db` |
+| [State Store](state-store.md) | SQL | DAG nodes (every message), versioned KV state (values, snapshots, state commits) | Configurable |
+| [Conversations Repository](conversations-repo.md) | Git | Projection of messages as git commits | `~/.vlinder/conversations/` |
 
-The two stores are linked by the `State:` trailer on complete message commits. This trailer contains a state commit hash that points into the State Store's SQLite tables. Given any point in the conversation history, the platform can resolve the agent's exact KV state at that moment.
-
-The Object Storage worker writes to both stores on every `kv_put` — the ObjectStorage backend for current-state access, and the State Store for versioned history. Reads resolve through the State Store when a state hash is provided, falling back to the ObjectStorage backend for unversioned reads.
+The [Conversations Repository](conversations-repo.md) is a **read-only projection**, not a source of truth. The DAG Git worker tails the NATS message stream and writes each message as a git commit. This gives you `git log`, `git diff`, and standard git tooling for free — but the authoritative data lives in the SQL database.
 
 ## See Also
 
 - [Queue System](queue-system.md) — message types and NATS subject routing
 - [Agents Model](agents-model.md) — agent lifecycle and delegation
-- [State Store](state-store.md) — versioned agent state in SQLite
+- [State Store](state-store.md) — versioned agent state
 - [Domain Model](domain-model.md) — core types and traits
 - [Distributed Deployment](../how-to/distributed-deployment.md) — multi-node setup
