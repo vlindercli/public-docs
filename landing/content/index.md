@@ -9,10 +9,10 @@ hide:
 
 # VlinderCLI
 
-**AI agents that can time travel.**
+**Debug and repair AI agents.**
 
-Design, build, run, and observe AI agents.
-Debug with time-travel. Scale seamlessly from laptop to cluster.
+When AI agents fail, rewind to the failure, inspect the exact state, test a fix, and replay.
+Every decision your agent makes is captured. Nothing is lost.
 
 [Get Started](https://docs.vlindercli.dev/tutorials/getting-started/){ .md-button .md-button--primary }
 [Contribute](https://docs.vlindercli.dev/contribute/){ .md-button .md-button--contribute }
@@ -20,36 +20,32 @@ Debug with time-travel. Scale seamlessly from laptop to cluster.
 </div>
 <div class="landing-right" markdown>
 
-```title="Converse with an agent, then fork the timeline"
-$ vlinder agent run -p agents/todoapp
+```title="Agent fails. Rewind. Fork. Fix. Continue."
+$ vlinder agent run todoapp
 > add buy milk
 > add buy eggs
-> add buy carrots
+> add buy carrots    # wrong — should be bread
 
-$ vlinder timeline fork 15d739d
-Forked at "buy eggs" → fork-15d739d
+$ vlinder session fork wired-pig-543e \
+    --from a1b2c3d4 --name fix-groceries
 
-$ vlinder agent run -p agents/todoapp
-Resuming from state sc2…
+$ vlinder agent run todoapp --branch fix-groceries
+Resuming from state a1b2c3d4…
 > list
 1. buy milk
-2. buy eggs        # no carrots
-> add buy bread
+2. buy eggs        # rewound past carrots
+> add buy bread    # fixed
 ```
-```title="Two timelines, one store"
-$ git log --oneline --graph --all
-* 3acba82 (HEAD -> fork-15d739d) agent
-* ec7f26b user
-| * 0b1f368 (main) agent
-| * 9f4c36e user
-|/
-* 15d739d agent
-* 2a1ceef user
-* 6228441 agent
-* d30357d user
+```title="Both timelines preserved"
+$ vlinder session branches wired-pig-543e
+main             → milk, eggs, carrots
+fix-groceries    → milk, eggs, bread
+
+$ vlinder session promote fix-groceries
+Old main sealed as broken-2026-03-11.
 ```
 
-<p class="landing-caption">main: milk, eggs, carrots &nbsp;·&nbsp; fork: milk, eggs, bread<br>Switch back any time. Nothing is copied or deleted.</p>
+<p class="landing-caption">Rewind to any completed turn. Fork. Fix. Promote.<br>The old timeline is sealed, never deleted.</p>
 
 </div>
 </div>
