@@ -1,73 +1,77 @@
 # Services
 
-Services are the capabilities available to agents at runtime. Agents declare their service requirements in [`agent.toml`](agent-toml.md) and the supervisor routes requests to the appropriate worker via the message queue.
+Services are the capabilities available to agents at runtime. Agents declare their service requirements in [`agent.toml`](agent-toml.md), and the platform routes requests to the appropriate worker via typed messages on the queue.
 
-## Available Services
+## Service Types
 
-| Service | Queue name | Description |
-|---------|-----------|-------------|
+| Service type | TOML key | Description |
+|--------------|----------|-------------|
 | Inference | `infer` | Text generation via LLM |
 | Embedding | `embed` | Vector embedding generation |
-| Object Storage | `storage` | Persistent key-value object storage |
-| Vector Storage | `storage` | Similarity search over vector embeddings |
+| Object Storage | `kv` | Persistent key-value storage |
+| Vector Storage | `vec` | Similarity search over vector embeddings |
 
-## Inference
+## Providers
 
-Generates text from a prompt using a registered model.
+Each service type supports one or more backend providers. The agent manifest declares which provider and wire protocol to use per service.
 
-**Backends:**
+### Inference
 
-| Backend | Engine | Description |
-|---------|--------|-------------|
-| Ollama | `ollama` | Local inference via Ollama server |
-| OpenRouter | `openrouter` | Remote inference via OpenRouter API |
+| Provider | Description |
+|----------|-------------|
+| `ollama` | Local inference via Ollama server |
+| `openrouter` | Cloud inference via OpenRouter API |
 
-**Parameters:**
+### Embedding
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `max_tokens` | integer | `1024` | Maximum tokens to generate |
-| `temperature` | float | `0.7` | Sampling temperature |
+| Provider | Description |
+|----------|-------------|
+| `ollama` | Local embedding via Ollama server |
+| `openrouter` | Cloud embedding via OpenRouter API |
 
-## Embedding
+### Object Storage
 
-Generates vector embeddings for text input, used for semantic search via vector storage.
+Backend: SQL — file-backed, durable, content-addressed.
 
-**Backends:**
+### Vector Storage
 
-| Backend | Engine | Description |
-|---------|--------|-------------|
-| Ollama | `ollama` | Local embedding via Ollama server |
+Backend: SQL via [sqlite-vec](https://github.com/asg017/sqlite-vec) — similarity search over vector embeddings.
 
-**Parameters:**
+## Wire Protocols
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `dimensions` | integer | `768` | Embedding vector dimensions |
+Agents communicate with services using a declared wire protocol. This determines the request/response shape the agent speaks.
 
-## Object Storage
+| Protocol | Description |
+|----------|-------------|
+| `openai` | OpenAI-compatible Chat Completion / Embeddings API |
+| `anthropic` | Anthropic Messages API |
 
-Persistent key-value storage for agent data.
+## Declaring Services
 
-**Backend:** SQLite — file-backed, durable, content-addressed.
+Services are declared in `agent.toml` under `[requirements.services.<type>]`:
 
-## Vector Storage
+```toml
+[requirements.services.infer]
+provider = "openrouter"
+protocol = "anthropic"
+models = ["anthropic/claude-3.5-sonnet"]
 
-Similarity search over vector embeddings, powered by [sqlite-vec](https://github.com/asg017/sqlite-vec) (MIT licensed).
+[requirements.services.embed]
+provider = "ollama"
+protocol = "openai"
+models = ["nomic-embed-text:latest"]
+```
 
-**Backend:** SQLite via sqlite-vec.
+Invalid combinations (e.g., an unrecognized provider or service type) fail at parse time.
 
-## Message Flow
+## Message Routing
 
-All service interactions use typed messages on the queue:
+All service interactions use typed messages on the queue. The agent sends a `RequestMessage` specifying the service, backend, and operation. The platform routes it to the correct worker via the `RoutingKey`. The worker processes the request and returns a `ResponseMessage`.
 
-1. **Agent** sends a `RequestMessage` to the service queue
-2. **Worker** processes the request and sends a `ResponseMessage` back
-
-See [Queue System](../explanation/queue-system.md) for the full message flow.
+See [Queue System](../explanation/queue-system.md) for routing details and NATS subject mapping.
 
 ## See Also
 
 - [agent.toml](agent-toml.md) — declaring service requirements
-- [Storage](../how-to/storage.md) how-to guide
-- [Storage Model](../explanation/storage-model.md) explanation
+- [Domain Model](../explanation/domain-model.md) — `ServiceBackend` and `Operation` types
+- [Queue System](../explanation/queue-system.md) — message types and routing
