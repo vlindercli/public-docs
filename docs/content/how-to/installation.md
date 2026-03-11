@@ -6,7 +6,7 @@
 |-----------|------|----------|
 | **Rust toolchain** | Building from source | Yes |
 | **protobuf-compiler** | Protobuf code generation | Yes |
-| **NATS** | Message queue for distributed agent communication | Yes |
+| **NATS** | Message queue for agent communication | Yes |
 | **Podman** | Container runtime for agents | Yes |
 | **Ollama** | LLM inference and embedding | No (but needed for agents that use LLMs) |
 
@@ -57,26 +57,27 @@ cp target/release/vlinder /usr/local/bin/vlinder
 
 ## Bootstrap
 
-Create the data directory and a default config:
+Create the data directory and a minimal config:
 
 ```bash
-mkdir -p ~/.vlinder/{agents,conversations,logs,registry}
+mkdir -p ~/.vlinder/{agents,conversations,logs}
 ```
 
 Create `~/.vlinder/config.toml`:
 
 ```toml
-[distributed]
-enabled = true
+[logging]
+level = "info"
 
-[distributed.workers.agent]
-container = 1
-
-[distributed.workers.inference]
-ollama = 1
+[ollama]
+endpoint = "http://localhost:11434"
 
 [queue]
 backend = "nats"
+nats_url = "nats://localhost:4222"
+
+[state]
+backend = "grpc"
 ```
 
 ## Start Services
@@ -127,9 +128,10 @@ After setup, `~/.vlinder/` contains:
 ├── nats.conf           # NATS config (JetStream enabled)
 ├── nats-data/          # NATS JetStream storage
 ├── agents/             # Agent data and storage
-├── conversations/      # Timeline git repository
+├── conversations/      # Conversations git projection
 ├── logs/               # JSONL log files
-└── registry/           # Registry data
+├── registry.db         # Registry database
+└── dag.db              # DAG database
 ```
 
 ## Next Steps
