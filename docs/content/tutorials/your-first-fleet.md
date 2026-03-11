@@ -102,10 +102,11 @@ executable = "localhost/my-fleet-coordinator:latest"
 executable = "localhost/my-fleet-researcher:latest"
 ```
 
-## Step 6: Run the Fleet
+## Step 6: Deploy and Run the Fleet
 
 ```bash
-vlinder fleet run
+vlinder fleet deploy
+vlinder fleet run my-fleet
 ```
 
 Vlinder loads `fleet.toml`, deploys both agents, and starts an interactive session with the coordinator.
@@ -124,14 +125,11 @@ The first message is handled directly by the coordinator. The second is delegate
 
 ## Step 7: Observe Delegation
 
-Inspect the timeline to see both agents' interactions:
+Inspect the session to see both agents' interactions:
 
 ```bash
-# See all interactions
-vlinder timeline log
-
-# Filter to just the researcher
-vlinder timeline log --agent researcher
+vlinder session list coordinator
+vlinder session list researcher
 ```
 
 ## What You Learned
@@ -140,7 +138,7 @@ vlinder timeline log --agent researcher
 - How to add agents to a fleet using `vlinder agent new`
 - How to write a [`fleet.toml`](../reference/fleet-toml.md) manifest
 - How the entry agent delegates work to other agents using `delegate()` and `wait()`
-- How to observe delegation in the timeline
+- How to observe delegation in session history
 
 ## Next Steps
 
