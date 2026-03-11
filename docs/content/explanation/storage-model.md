@@ -19,7 +19,7 @@ Agents access storage through the message queue, not by linking a storage librar
 
 Storage operations produce content hashes that feed into the Merkle DAG. When you fork or repair a timeline, the storage state is part of what gets restored. This is what makes time-travel debugging work for stateful agents — you can rewind to a previous state and the storage contents match.
 
-The mechanism behind this is the [State Store](state-store.md) — a content-addressed, append-only SQLite database that mirrors git's object model (values, snapshots, commits). Every `kv_put` creates a new state commit rather than overwriting data. The state commit hash is recorded on the conversation commit's `State:` trailer, linking the two stores. Because old values are never deleted, any historical state can be read by pointing at its state commit hash.
+The mechanism behind this is the [State Store](state-store.md) — a content-addressed, append-only store that uses the same object model as git (values, snapshots, commits). Every `kv_put` creates a new state commit rather than overwriting data. The state commit hash is recorded on the `CompleteMessage`'s `state` field. Because old values are never deleted, any historical state can be read by pointing at its state commit hash.
 
 ## Object Storage
 
@@ -27,11 +27,11 @@ Key-value storage for arbitrary data. Each object is identified by a key and sto
 
 **Backends:**
 
-SQLite is the default backend — durable, file-backed, and content-addressed.
+SQL is the current backend — durable, file-backed, and content-addressed.
 
 ## Vector Storage
 
-Similarity search over vector embeddings, powered by [sqlite-vec](https://github.com/asg017/sqlite-vec) (MIT licensed). Agents store embeddings and query by vector similarity. Also backed by SQLite.
+Similarity search over vector embeddings. Agents store embeddings and query by vector similarity. The current backend uses [sqlite-vec](https://github.com/asg017/sqlite-vec) (MIT licensed).
 
 ## BYOS (Bring Your Own Storage)
 The `ObjectStorage` and `VectorStorage` traits define the storage interface. New backends can be added by implementing these traits. Agent code doesn't change — queue routing handles the switch transparently.
