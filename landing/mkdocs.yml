@@ -14,6 +14,7 @@ theme:
     primary: indigo
     accent: deep purple
   features:
+    - navigation.tabs
     - navigation.footer
     - content.code.copy
 
