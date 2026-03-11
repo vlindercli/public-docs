@@ -1,130 +1,105 @@
 # Conversations Repository
 
-The conversations repository is a git repo at `~/.vlinder/conversations/` (or `$VLINDER_DIR/conversations/`) that stores conversation turns. Created automatically on first use.
+The conversations repository is a read-only git projection of VlinderCLI's message DAG, located at `~/.vlinder/conversations/` (or `$VLINDER_DIR/conversations/`). The DAG Git worker writes each message as a git commit. Created automatically on first use.
 
-## Directory Structure
-
-```
-~/.vlinder/conversations/
-├── .git/
-├── {datetime}_{agent}_{short_id}.json
-├── {datetime}_{agent}_{short_id}.json
-└── ...
-```
-
-## Filename Format
-
-```
-{datetime}_{agent}_{short_id}.json
-```
-
-| Component | Format | Example |
-|-----------|--------|---------|
-| `datetime` | `YYYY-MM-DDTHH-MM-SSZ` (filesystem-safe UTC) | `2026-02-08T14-30-05Z` |
-| `agent` | Agent name from `agent.toml` | `researcher` |
-| `short_id` | First 8 chars of session UUID | `abc12345` |
-
-Example: `2026-02-08T14-30-05Z_researcher_abc12345.json`
-
-## Session JSON Schema
-
-```json
-{
-  "open": "What about its population?",
-  "session": "ses-abc12345-6789-0abc-def0-123456789abc",
-  "agent": "researcher",
-  "history": [
-    {
-      "user": "Tell me about Paris",
-      "submission": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
-      "at": "2026-02-08T14:30:05Z"
-    },
-    {
-      "agent": "Paris is the capital of France, known for the Eiffel Tower and its rich cultural history.",
-      "at": "2026-02-08T14:30:47Z"
-    },
-    {
-      "user": "What about its population?",
-      "submission": "f6e5d4c3b2a1f6e5d4c3b2a1f6e5d4c3b2a1f6e5",
-      "at": "2026-02-08T14:31:02Z"
-    }
-  ]
-}
-```
-
-### Top-level Fields
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `open` | `string \| null` | Current unanswered input. `null` when conversation is at rest. |
-| `session` | `string` | Session ID. Format: `ses-{uuid}`. |
-| `agent` | `string` | Agent name this session belongs to. |
-| `history` | `array` | Completed conversation turns (see below). |
-
-### History Entry: User
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `user` | `string` | The user's input text. |
-| `submission` | `string` | Git commit SHA of the user input commit. |
-| `at` | `string` | UTC ISO 8601 timestamp. |
-
-### History Entry: Agent
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `agent` | `string` | The agent's response text. |
-| `at` | `string` | UTC ISO 8601 timestamp. |
-
-History entries are untagged — distinguish them by checking for the `user` or `agent` key.
+The authoritative data lives in the SQL DAG store. The git repo is a visualization aid — turning it off changes nothing about how the platform operates.
 
 ## Git Commit Format
 
-Each turn (user input or agent response) is a separate git commit. The commit message encodes the type and metadata.
+Every message is a separate git commit. The commit subject follows the format `{type}: {from} → {to}`, with metadata encoded as trailers.
 
-### User Input Commit
+### Invoke Commit (User Input)
 
 ```
-user
+invoke: cli → todoapp
 
-<user input text>
-
-Session: <session_id>
+Session: ses-abc12345
+Submission: sub-001
 ```
 
-| Trailer | Value |
-|---------|-------|
+### Complete Commit (Agent Response)
+
+```
+complete: todoapp → cli
+
+Session: ses-abc12345
+Submission: sub-001
+State: deadbeef1234...
+```
+
+### Request / Response Commits (Service Interactions)
+
+```
+request: todoapp → infer
+
+Session: ses-abc12345
+Submission: sub-001
+```
+
+```
+response: infer → todoapp
+
+Session: ses-abc12345
+Submission: sub-001
+```
+
+### Trailers
+
+| Trailer | Description |
+|---------|-------------|
 | `Session` | Session ID (`ses-{uuid}`) |
+| `Submission` | Submission ID — groups all messages belonging to the same turn |
+| `State` | Agent state hash at completion (on `complete` commits only) |
 
-The commit SHA becomes the `SubmissionId` used throughout the system.
+## Accumulated Tree Model
 
-### Agent Response Commit
+Each commit's tree contains **all** previous message directories plus the new one. Directory names follow the pattern `{YYYYMMDD-HHMMSS.mmm}-{sender}-{type}`:
 
 ```
-agent
-
-<agent response text>
-
-Session: <session_id>
-Submission: <user_commit_sha>
-State: <state_hash>
+tree of commit 4 (complete: todoapp → cli):
+├── 20260213-143005.000-cli-invoke/
+├── 20260213-143006.100-todoapp-request/
+├── 20260213-143006.500-infer-response/
+├── 20260213-143007.200-todoapp-complete/
+├── agent.toml
+├── platform.toml
+└── models/
 ```
 
-| Trailer | Value |
-|---------|-------|
-| `Session` | Session ID (`ses-{uuid}`) |
-| `Submission` | SHA of the corresponding user input commit |
-| `State` | Merkle DAG state hash (optional, present when state tracking is active) |
+Each message directory contains one file per field — scalar fields as plain text, binary fields as raw blobs, diagnostics as TOML. Every commit is a self-contained snapshot of the entire conversation.
 
 ## Branches
 
 | Branch | Purpose |
 |--------|---------|
 | `main` | Default timeline |
-| `fork-{short_sha}` | Forked timeline created by `vlinder timeline fork` |
+| Named branches | Forked timelines created by `vlinder session fork` |
+
+When the platform forks a timeline, the DAG Git worker creates a corresponding git branch. Both branches share commits before the fork point.
+
+## Reading the Git Log
+
+```bash
+cd ~/.vlinder/conversations
+
+# Full conversation timeline
+git log --oneline --reverse
+
+# Output:
+# a1b2c3d invoke: cli → todoapp
+# e5f6789 request: todoapp → infer
+# 0123456 response: infer → todoapp
+# 789abcd complete: todoapp → cli
+
+# Read a specific message
+git log -1 --format=%B a1b2c3d
+
+# Diff between two points
+git diff a1b2c3d..789abcd
+```
 
 ## See Also
 
-- [Conversations Repository explanation](../explanation/conversations-repo.md) — how it works and why
+- [Conversations Repository explanation](../explanation/conversations-repo.md) — design rationale
 - [Timelines](../explanation/timelines.md) — the Merkle DAG model
 - [Time-Travel Debugging](../how-to/time-travel-debugging.md) — practical fork workflows
