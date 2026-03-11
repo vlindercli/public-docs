@@ -1,41 +1,40 @@
 # Storage
 
-VlinderCLI provides two storage systems for agents: **object storage** (file-like key-value) and **vector storage** (embedding similarity search). Both default to SQLite.
+VlinderCLI provides two storage systems for agents: **object storage** (key-value) and **vector storage** (embedding similarity search).
 
 ## Object Storage
 
-Object storage lets agents read and write files by path. Declare it in `agent.toml`:
+Object storage lets agents read and write data by key. Declare it in `agent.toml`:
 
 ```toml
 object_storage = "sqlite://data/objects.db"
-
-[requirements]
-services = ["get_file", "put_file", "list_files"]
 ```
 
-This creates a SQLite database at `data/objects.db` relative to the agent's data directory. The agent can then use the bridge helpers:
+Relative paths are resolved against the agent's manifest directory. The agent can then use the bridge helpers:
 
 | Function | Description |
 |----------|-------------|
-| `kv_put(path, content)` | Write content to a path |
-| `kv_get(path)` | Read content from a path |
+| `kv_put(key, content)` | Write content to a key |
+| `kv_get(key)` | Read content from a key |
 | `kv_list(prefix)` | List keys under a prefix |
-| `kv_delete(path)` | Delete a key |
+| `kv_delete(key)` | Delete a key |
 
-Object storage is content-addressed — each write produces a state hash that integrates with the timeline for time-travel debugging.
+Object storage is content-addressed — each write produces a state hash that integrates with the DAG for time-travel debugging.
 
 ## Vector Storage
 
-Vector storage lets agents store and search embeddings for semantic search. Declare it alongside an embedding model:
+Vector storage lets agents store and search embeddings for semantic search. Declare it in `agent.toml` alongside an embedding service:
 
 ```toml
 vector_storage = "sqlite://data/vectors.db"
 
-[requirements]
-services = ["embed", "store_embedding", "search_by_vector"]
-
 [requirements.models]
-nomic-embed = "ollama://localhost:11434/nomic-embed-text:latest"
+nomic-embed = "nomic-embed-text"
+
+[requirements.services.embed]
+provider = "ollama"
+protocol = "openai"
+models = ["nomic-embed-text:latest"]
 ```
 
 Bridge helpers:
@@ -55,20 +54,29 @@ A full-featured agent might use both storage systems:
 object_storage = "sqlite://data/objects.db"
 vector_storage = "sqlite://data/vectors.db"
 
-[requirements]
-services = ["infer", "embed", "get_file", "put_file", "list_files", "store_embedding", "search_by_vector"]
-
 [requirements.models]
-phi3 = "ollama://localhost:11434/phi3:latest"
-nomic-embed = "ollama://localhost:11434/nomic-embed-text:latest"
+inference_model = "claude-sonnet"
+embedding_model = "nomic-embed-text"
+
+[requirements.services.infer]
+provider = "openrouter"
+protocol = "anthropic"
+models = ["anthropic/claude-3.5-sonnet"]
+
+[requirements.services.embed]
+provider = "ollama"
+protocol = "openai"
+models = ["nomic-embed-text:latest"]
 ```
 
-## Storage Backend
+## Storage Backends
 
-SQLite is the default and only user-facing backend. Data is file-backed, survives restarts, and is content-addressed for timeline integration.
+The storage URI scheme selects the backend. Each backend has its own strengths and platform constraints — the choice of backend is a meaningful architectural decision, not a transparent swap.
+
+All backends implement content-addressed versioning, which is what makes time-travel debugging possible. The specific constraints and capabilities vary by backend.
 
 ## See Also
 
-- [Services reference](../reference/services.md) — full list of service names
+- [Services reference](../reference/services.md) — service types and providers
 - [Storage Model](../explanation/storage-model.md) — design philosophy and content addressing
 - [agent.toml](../reference/agent-toml.md) — declaring requirements
