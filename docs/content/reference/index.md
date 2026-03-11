@@ -6,10 +6,12 @@ Reference documentation is **information-oriented** and provides exact specifica
 
 See the [CLI command overview](cli/index.md) for a summary of all commands, or jump to a specific command:
 
-- [`vlinder agent`](cli/agent.md) — run, list, and inspect agents
-- [`vlinder fleet`](cli/fleet.md) — run a fleet of agents
+- [`vlinder agent`](cli/agent.md) — deploy, run, list, and inspect agents
+- [`vlinder fleet`](cli/fleet.md) — deploy and run a fleet of agents
 - [`vlinder model`](cli/model.md) — add, list, and remove models
-- [`vlinder timeline`](cli/timeline.md) — inspect and fork timelines
+- [`vlinder session`](cli/session.md) — inspect, fork, and promote sessions
+- [`vlinder turn`](cli/turn.md) — inspect individual turns
+- [`vlinder secret`](cli/secret.md) — manage secrets
 - [`vlinder daemon`](cli/daemon.md) — run the vlinder daemon
 
 ## Configuration Files
@@ -22,4 +24,5 @@ See the [CLI command overview](cli/index.md) for a summary of all commands, or j
 ## Other
 
 - [Environment Variables](environment-variables.md) — `VLINDER_*` override table
-- [Services](services.md) — inference, embedding, storage queue names and protocols
+- [Services](services.md) — service types, providers, and wire protocols
+- [Conversations Repository](conversations-repo.md) — git projection commit format
