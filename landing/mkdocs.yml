@@ -28,7 +28,9 @@ extra:
     property: G-XXXXXXXXXX
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/vlindercli/vlinder
+      link: https://github.com/vlindercli/vlindercli
+    - icon: fontawesome/brands/discord
+      link: https://discord.vlindercli.dev/
 
 markdown_extensions:
   - attr_list
@@ -55,3 +57,4 @@ nav:
   - Docs: https://docs.vlindercli.dev/
   - Blog: https://blog.vlindercli.dev/
   - Slides: https://slides.vlindercli.dev/
+  - Discord: https://discord.vlindercli.dev/
