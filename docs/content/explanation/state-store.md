@@ -2,7 +2,7 @@
 
 The State Store is a content-addressed, append-only store that versions every change to an agent's key-value storage. It uses a Merkle DAG object model — values, snapshots, and commits — giving each agent a complete, verifiable history of its state.
 
-This is the mechanism behind the "All state is content-addressed" rule in the [Storage Model](storage-model.md). When you [repair a timeline](../how-to/time-travel-debugging.md), the `state` field on the DAG node points into this store — that's how the platform knows exactly what to restore.
+This is the mechanism behind the "All state is content-addressed" rule in the [Storage Model](storage-model.md). When you [rewind to a previous turn](time-travel.md), the `state` field on the DAG node points into this store — that's how the platform knows exactly what to restore.
 
 ## Three Rules
 
@@ -92,10 +92,10 @@ Given any DAG node, you can resolve the agent's complete KV state at that point 
 
 ## Why This Enables Time Travel
 
-When you run `vlinder timeline checkout` + `repair`:
+When you fork from a previous turn:
 
-1. **Checkout** moves HEAD to a historical DAG node
-2. **Repair** reads the `state` field from that node
+1. **Fork** identifies the target DAG node
+2. The platform reads the `state` field from that node
 3. The state hash points to a state commit in the State Store
 4. The state commit points to a snapshot — the complete path → value mapping at that point
 5. The agent is initialized with that state hash, so all reads resolve through the historical snapshot
