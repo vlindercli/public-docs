@@ -6,11 +6,14 @@ VlinderCLI provides a hierarchical command structure built with [clap](https://d
 
 | Command | Description |
 |---------|-------------|
-| [`vlinder agent`](agent.md) | Run, list, and inspect agents |
-| [`vlinder fleet`](fleet.md) | Create and run a fleet of agents |
+| [`vlinder agent`](agent.md) | Deploy, run, list, and inspect agents |
+| [`vlinder fleet`](fleet.md) | Deploy and run a fleet of agents |
 | [`vlinder model`](model.md) | Add, list, and remove models from catalogs |
-| [`vlinder timeline`](timeline.md) | Inspect and fork timelines |
+| [`vlinder session`](session.md) | Inspect, fork, and promote agent sessions |
+| [`vlinder turn`](turn.md) | Inspect individual turns within a session |
+| [`vlinder secret`](secret.md) | Manage secrets (private keys, API keys) |
 | [`vlinder daemon`](daemon.md) | Start the supervisor (worker process manager) |
+| `vlinder support` | Interactive support — runs the bundled support fleet |
 
 ## Global Behavior
 
