@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-OUT="_site"
+OUT="$(pwd)/_site"
 rm -rf "$OUT"
 
 # Landing → root
-mkdocs build -f landing/mkdocs.cloudflare.yml -d "../$OUT"
+mkdocs build -f landing/mkdocs.cloudflare.yml -d "$OUT"
 
 # Docs → /docs/
-mkdocs build -f docs/mkdocs.cloudflare.yml -d "../$OUT/docs"
+mkdocs build -f docs/mkdocs.cloudflare.yml -d "$OUT/docs"
 
 # Blog → /blog/
-mkdocs build -f blog/mkdocs.cloudflare.yml -d "../$OUT/blog"
+mkdocs build -f blog/mkdocs.cloudflare.yml -d "$OUT/blog"
 
-# Slides → /slides/ (prebuilt)
-cp -r slides/site "$OUT/slides"
+# Slides → /slides/
+mkslides build -f slides/mkslides.yml -d "$OUT/slides" slides/content
 
 # Discord redirect + other redirects
 cp _redirects "$OUT/_redirects"
