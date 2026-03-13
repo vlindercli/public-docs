@@ -4,6 +4,9 @@ docs/site/
 blog/site/
 slides/site/
 
+# Cloudflare Pages consolidated build
+_site/
+
 # Python
 venv/
 __pycache__/

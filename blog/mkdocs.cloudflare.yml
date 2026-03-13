@@ -1,0 +1,14 @@
+INHERIT: mkdocs.yml
+
+site_url: https://vlindercli.dev/blog/
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/vlindercli/vlinder
+
+nav:
+  - Blog: index.md
+  - Docs: /docs/
+  - Slides: /slides/
+  - Home: /

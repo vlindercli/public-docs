@@ -1,0 +1,77 @@
+INHERIT: mkdocs.yml
+
+site_url: https://vlindercli.dev/docs/
+
+extra:
+  analytics:
+    feedback:
+      title: Was this page helpful?
+      ratings:
+        - icon: material/thumb-up-outline
+          name: This page was helpful
+          data: 1
+          note: >-
+            Thanks for your feedback!
+        - icon: material/thumb-down-outline
+          name: This page could be improved
+          data: 0
+          note: >-
+            Thanks for your feedback! Help us improve by
+            <a href="https://github.com/vlindercli/vlinder/issues/new?title=[docs]+{title}+-+{url}" target="_blank" rel="noopener">opening an issue</a>.
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/vlindercli/vlindercli
+    - icon: fontawesome/brands/discord
+      link: /discord/
+
+nav:
+  - Home: index.md
+  - Contribute: contribute.md
+  - Tutorials:
+    - tutorials/index.md
+    - Get Started: tutorials/getting-started.md
+    - Adding Models: tutorials/adding-models.md
+    - Your First Agent: tutorials/your-first-agent.md
+    - Your First Fleet: tutorials/your-first-fleet.md
+  - How-to Guides:
+    - how-to/index.md
+    - Installation: how-to/installation.md
+    - Manage Models: how-to/manage-models.md
+    - Storage: how-to/storage.md
+    - Configuration: how-to/configuration.md
+    - Time-Travel Debugging: how-to/time-travel-debugging.md
+    - Observability: how-to/observability.md
+    - Distributed Deployment: how-to/distributed-deployment.md
+  - Explanation:
+    - explanation/index.md
+    - Architecture: explanation/architecture.md
+    - Agents Model: explanation/agents-model.md
+    - Timelines: explanation/timelines.md
+    - Queue System: explanation/queue-system.md
+    - Storage Model: explanation/storage-model.md
+    - State Store: explanation/state-store.md
+    - Conversations Repository: explanation/conversations-repo.md
+    - Time Travel: explanation/time-travel.md
+    - Domain Model: explanation/domain-model.md
+  - Reference:
+    - reference/index.md
+    - CLI Commands:
+      - Overview: reference/cli/index.md
+      - vlinder agent: reference/cli/agent.md
+      - vlinder fleet: reference/cli/fleet.md
+      - vlinder model: reference/cli/model.md
+      - vlinder session: reference/cli/session.md
+      - vlinder turn: reference/cli/turn.md
+      - vlinder secret: reference/cli/secret.md
+      - vlinder daemon: reference/cli/daemon.md
+    - Configuration:
+      - agent.toml: reference/agent-toml.md
+      - fleet.toml: reference/fleet-toml.md
+      - model.toml: reference/model-toml.md
+      - config.toml: reference/config-toml.md
+      - Environment Variables: reference/environment-variables.md
+    - Conversations Repository: reference/conversations-repo.md
+    - Services: reference/services.md
+  - Blog: /blog/
+  - Slides: /slides/
+  - Discord: /discord/
