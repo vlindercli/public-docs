@@ -3,6 +3,7 @@ INHERIT: mkdocs.yml
 site_url: https://vlindercli.dev/docs/
 
 extra:
+  homepage: /
   analytics:
     feedback:
       title: Was this page helpful?
@@ -25,7 +26,7 @@ extra:
       link: /discord/
 
 nav:
-  - Home: index.md
+  - Docs: index.md
   - Contribute: contribute.md
   - Tutorials:
     - tutorials/index.md

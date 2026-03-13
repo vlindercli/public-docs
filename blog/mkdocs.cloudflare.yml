@@ -3,12 +3,15 @@ INHERIT: mkdocs.yml
 site_url: https://vlindercli.dev/blog/
 
 extra:
+  homepage: /
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/vlindercli/vlinder
+    - icon: fontawesome/brands/discord
+      link: /discord/
 
 nav:
-  - Blog: index.md
   - Docs: /docs/
+  - Blog: index.md
   - Slides: /slides/
-  - Home: /
+  - Discord: /discord/
