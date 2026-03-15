@@ -3,6 +3,9 @@ site_url: https://vlindercli.dev
 site_description: AI agents that can time travel
 site_author: VlinderCLI Contributors
 
+repo_url: https://github.com/vlindercli/vlindercli
+repo_name: vlindercli/vlindercli
+
 theme:
   name: material
   custom_dir: overrides

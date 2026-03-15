@@ -53,13 +53,6 @@
   color: #fff;
 }
 
-/* GitHub star/fork buttons */
-.md-typeset .github-buttons {
-  margin-top: 1rem;
-  display: flex;
-  gap: 0.5rem;
-}
-
 /* Stack on small screens */
 @media (max-width: 960px) {
   .md-typeset .landing {
@@ -68,8 +61,5 @@
   }
   .md-typeset .landing-left {
     text-align: center;
-  }
-  .md-typeset .github-buttons {
-    justify-content: center;
   }
 }

@@ -17,11 +17,6 @@ Every decision your agent makes is captured. Nothing is lost.
 [Get Started](https://docs.vlindercli.dev/tutorials/getting-started/){ .md-button .md-button--primary }
 [Contribute](https://docs.vlindercli.dev/contribute/){ .md-button .md-button--contribute }
 
-<div class="github-buttons">
-<iframe src="https://ghbtns.com/github-btn.html?user=vlindercli&repo=vlindercli&type=star&count=true&size=large" frameborder="0" scrolling="0" width="170" height="30" title="Star vlindercli on GitHub"></iframe>
-<iframe src="https://ghbtns.com/github-btn.html?user=vlindercli&repo=vlindercli&type=fork&count=true&size=large" frameborder="0" scrolling="0" width="170" height="30" title="Fork vlindercli on GitHub"></iframe>
-</div>
-
 </div>
 <div class="landing-right" markdown>
 
