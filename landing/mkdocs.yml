@@ -1,6 +1,6 @@
 site_name: VlinderCLI
 site_url: https://vlindercli.dev
-site_description: AI agents that can time travel
+site_description: Debug and Repair AI agents in production
 site_author: VlinderCLI Contributors
 
 repo_url: https://github.com/vlindercli/vlindercli
