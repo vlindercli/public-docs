@@ -41,7 +41,7 @@ Point all workers at the shared NATS server and gRPC services:
 ## Start the Daemon
 
 ```bash
-vlinder daemon
+vlinderd
 ```
 
 ## Configure Workers
@@ -123,7 +123,7 @@ Example: a GPU node that only runs inference workers.
     VLINDER_WORKERS_AGENT_CONTAINER=0 \
     VLINDER_WORKERS_REGISTRY=0 \
     VLINDER_WORKERS_HARNESS=0 \
-    vlinder daemon
+    vlinderd
     ```
 
 ## Architecture

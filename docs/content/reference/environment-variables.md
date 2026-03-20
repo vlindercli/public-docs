@@ -44,11 +44,11 @@ All [`config.toml`](config-toml.md) values can be overridden via environment var
 | Variable | Config equivalent | Default | Description |
 |----------|-------------------|---------|-------------|
 | `VLINDER_DISTRIBUTED_REGISTRY_BACKEND` | `distributed.registry_backend` | `grpc` | Registry backend |
-| `VLINDER_DISTRIBUTED_REGISTRY_ADDR` | `distributed.registry_addr` | `http://127.0.0.1:9090` | Registry gRPC address |
-| `VLINDER_DISTRIBUTED_STATE_ADDR` | `distributed.state_addr` | `http://127.0.0.1:9092` | State service gRPC address |
-| `VLINDER_DISTRIBUTED_HARNESS_ADDR` | `distributed.harness_addr` | `http://127.0.0.1:9091` | Harness gRPC address |
-| `VLINDER_DISTRIBUTED_SECRET_ADDR` | `distributed.secret_addr` | `http://127.0.0.1:9093` | Secret store gRPC address |
-| `VLINDER_DISTRIBUTED_CATALOG_ADDR` | `distributed.catalog_addr` | `http://127.0.0.1:9094` | Catalog service gRPC address |
+| `VLINDER_DISTRIBUTED_REGISTRY_ADDR` | `distributed.registry_addr` | `http://0.0.0.0:9090` | Registry gRPC address |
+| `VLINDER_DISTRIBUTED_STATE_ADDR` | `distributed.state_addr` | `http://0.0.0.0:9092` | State service gRPC address |
+| `VLINDER_DISTRIBUTED_HARNESS_ADDR` | `distributed.harness_addr` | `http://0.0.0.0:9091` | Harness gRPC address |
+| `VLINDER_DISTRIBUTED_SECRET_ADDR` | `distributed.secret_addr` | `http://0.0.0.0:9093` | Secret store gRPC address |
+| `VLINDER_DISTRIBUTED_CATALOG_ADDR` | `distributed.catalog_addr` | `http://0.0.0.0:9094` | Catalog service gRPC address |
 
 ### Workers
 

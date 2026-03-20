@@ -46,7 +46,7 @@ nats_url = "nats://localhost:4222"
 
 [distributed]
 enabled = true
-registry_addr = "http://127.0.0.1:9090"
+registry_addr = "http://0.0.0.0:9090"
 
 [distributed.workers]
 registry = 1
@@ -68,6 +68,12 @@ sqlite = 1
 ```
 
 ### Run (four terminals)
+
+After building, add the build output to your PATH:
+
+```bash
+export PATH="$PWD/target/debug:$PATH"
+```
 
 VlinderCLI's distributed architecture uses NATS for message passing between workers. You'll need four terminals:
 
@@ -96,7 +102,7 @@ VlinderCLI's distributed architecture uses NATS for message passing between work
     Start the vlinder daemon (spawns registry, agent, inference, storage workers):
 
     ```bash
-    cargo run -- daemon
+    vlinderd
     ```
 
 === "Terminal 4 — CLI"
@@ -105,11 +111,10 @@ VlinderCLI's distributed architecture uses NATS for message passing between work
 
     ```bash
     # Register a model
-    cargo run -- model add phi3
+    vlinder model add phi3
 
     # Build and run an agent
     just run echo-container
-
     ```
 
 ### Build agent images

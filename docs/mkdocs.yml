@@ -132,7 +132,7 @@ nav:
       - vlinder session: reference/cli/session.md
       - vlinder turn: reference/cli/turn.md
       - vlinder secret: reference/cli/secret.md
-      - vlinder daemon: reference/cli/daemon.md
+      - vlinderd: reference/cli/daemon.md
     - Configuration:
       - agent.toml: reference/agent-toml.md
       - fleet.toml: reference/fleet-toml.md

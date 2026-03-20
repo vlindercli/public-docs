@@ -12,7 +12,7 @@ See the [CLI command overview](cli/index.md) for a summary of all commands, or j
 - [`vlinder session`](cli/session.md) — inspect, fork, and promote sessions
 - [`vlinder turn`](cli/turn.md) — inspect individual turns
 - [`vlinder secret`](cli/secret.md) — manage secrets
-- [`vlinder daemon`](cli/daemon.md) — run the vlinder daemon
+- [`vlinderd`](cli/daemon.md) — run the vlinder daemon
 
 ## Configuration Files
 

@@ -12,7 +12,7 @@ VlinderCLI provides a hierarchical command structure built with [clap](https://d
 | [`vlinder session`](session.md) | Inspect, fork, and promote agent sessions |
 | [`vlinder turn`](turn.md) | Inspect individual turns within a session |
 | [`vlinder secret`](secret.md) | Manage secrets (private keys, API keys) |
-| [`vlinder daemon`](daemon.md) | Start the supervisor (worker process manager) |
+| [`vlinderd`](daemon.md) | Start the supervisor (worker process manager) |
 | `vlinder support` | Interactive support — runs the bundled support fleet |
 
 ## Global Behavior

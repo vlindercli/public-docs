@@ -63,7 +63,7 @@ The agent reads from `/knowledge` like a local filesystem. Mounts are read-only 
 
 ## Identity
 
-Each agent is assigned an Ed25519 key pair at registration time. The public key is stored in the registry alongside the agent. Agents are also identified by a `ResourceId` URI (e.g., `http://127.0.0.1:9090/agents/echo-agent`) used in queue messages, registry lookups, and logging.
+Each agent is assigned an Ed25519 key pair at registration time. The public key is stored in the registry alongside the agent. Agents are also identified by a `ResourceId` URI (e.g., `http://0.0.0.0:9090/agents/echo-agent`) used in queue messages, registry lookups, and logging.
 
 For container agents, the platform captures a content-addressed image digest (`sha256:...`) at registration time. This enables deterministic execution by pinning the exact image, independent of mutable tags.
 

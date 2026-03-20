@@ -63,7 +63,7 @@ The startup sequence is ordered by dependency:
 
 ## Workers
 
-Each worker is the same `vlinder daemon` binary, launched with a `VLINDER_WORKER_ROLE` environment variable that determines its behavior. Workers are self-contained — each independently loads config and connects to NATS and the gRPC registry.
+Each worker is the same `vlinderd` binary, launched with a `VLINDER_WORKER_ROLE` environment variable that determines its behavior. Workers are self-contained — each independently loads config and connects to NATS and the gRPC registry.
 
 ### Worker Types
 

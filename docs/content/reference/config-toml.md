@@ -26,11 +26,11 @@ nats_creds = "~/.nats.creds"
 backend = "grpc"
 
 [distributed]
-registry_addr = "http://127.0.0.1:9090"
-state_addr = "http://127.0.0.1:9092"
-harness_addr = "http://127.0.0.1:9091"
-secret_addr = "http://127.0.0.1:9093"
-catalog_addr = "http://127.0.0.1:9094"
+registry_addr = "http://0.0.0.0:9090"
+state_addr = "http://0.0.0.0:9092"
+harness_addr = "http://0.0.0.0:9091"
+secret_addr = "http://0.0.0.0:9093"
+catalog_addr = "http://0.0.0.0:9094"
 
 [distributed.workers]
 registry = 1
@@ -103,11 +103,11 @@ gRPC addresses for inter-worker communication. All workers connect to these serv
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `registry_addr` | string | `"http://127.0.0.1:9090"` | Registry gRPC address |
-| `state_addr` | string | `"http://127.0.0.1:9092"` | State service gRPC address |
-| `harness_addr` | string | `"http://127.0.0.1:9091"` | Harness gRPC address (CLI → daemon) |
-| `secret_addr` | string | `"http://127.0.0.1:9093"` | Secret store gRPC address |
-| `catalog_addr` | string | `"http://127.0.0.1:9094"` | Catalog service gRPC address |
+| `registry_addr` | string | `"http://0.0.0.0:9090"` | Registry gRPC address |
+| `state_addr` | string | `"http://0.0.0.0:9092"` | State service gRPC address |
+| `harness_addr` | string | `"http://0.0.0.0:9091"` | Harness gRPC address (CLI → daemon) |
+| `secret_addr` | string | `"http://0.0.0.0:9093"` | Secret store gRPC address |
+| `catalog_addr` | string | `"http://0.0.0.0:9094"` | Catalog service gRPC address |
 
 ### `[distributed.workers]`
 

@@ -10,7 +10,7 @@ This separation is what makes time travel possible: because every operation flow
 
 | Type | Description | Example |
 |------|-------------|---------|
-| `ResourceId` | URI-based identifier for any system resource | `http://127.0.0.1:9090/agents/echo-agent` |
+| `ResourceId` | URI-based identifier for any system resource | `http://0.0.0.0:9090/agents/echo-agent` |
 | `AgentId` | Agent name used for queue routing | `echo-agent` |
 | `SessionId` | Conversation grouping | `ses-{uuid}` |
 | `SubmissionId` | Content-addressed hash of a user request | `SHA-256(payload \|\| session \|\| parent)` |

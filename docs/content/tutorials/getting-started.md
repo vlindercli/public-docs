@@ -1,34 +1,72 @@
 # Getting Started
 
-In this tutorial, you'll clone the VlinderCLI repository, build it from source, and explore the available commands.
+In this tutorial, you'll clone the VlinderCLI repository, build it from source, and run your first command.
 
-**Time:** ~10 minutes
+**Time:** ~15 minutes
 
-**Prerequisites:** macOS or Linux, a terminal, and the Rust toolchain.
+**Prerequisites:** macOS or Linux, a terminal. All other dependencies are installed in Step 1.
 
-## Step 1: Clone and Build
+## Step 1: Install Prerequisites
+
+Follow the [Installation](../how-to/installation.md) guide to install:
+
+- Rust toolchain (via rustup)
+- protobuf-compiler
+- NATS
+- Podman
+- Ollama (if your agents use LLMs)
+
+## Step 2: Clone and Build
 
 ```bash
 git clone https://github.com/vlindercli/vlindercli.git
 cd vlindercli
 cargo build --release
-cp target/release/vlinder /usr/local/bin/vlinder
+export PATH="$PWD/target/release:$PATH"
 ```
 
-See the [Installation](../how-to/installation.md) guide for prerequisite details (NATS, Podman) and bootstrapping `~/.vlinder/`.
+## Step 3: Bootstrap
 
-## Step 2: Explore Commands
-
-Run `vlinder help` to see the available subcommands:
+Create the config directory and a minimal config file. See [Installation — Bootstrap](../how-to/installation.md#bootstrap) for the full config template.
 
 ```bash
-vlinder help
+mkdir -p ~/.vlinder/{agents,conversations,logs}
 ```
 
-You'll see commands for running agents, managing fleets, working with models, inspecting sessions, and starting the daemon.
+Create `~/.vlinder/config.toml` with at least `[queue]` and `[state]` sections.
+
+## Step 4: Start Services
+
+You need three terminals:
+
+**Terminal 1 — NATS:**
+```bash
+nats-server -js
+```
+
+**Terminal 2 — Ollama** (if using LLM agents):
+```bash
+ollama serve
+```
+
+**Terminal 3 — Vlinder daemon:**
+```bash
+vlinderd
+```
+
+## Step 5: Verify
+
+In a fourth terminal:
+
+```bash
+vlinder agent list
+```
+
+You should see an empty list — no agents deployed yet.
 
 ## Next Steps
 
 - [Your First Agent](your-first-agent.md) — scaffold and run your own agent
+- [Adding Models](adding-models.md) — pull and register inference/embedding models
 - [Configuration](../how-to/configuration.md) — customize logging and providers
 - [Architecture](../explanation/architecture.md) — understand the component model

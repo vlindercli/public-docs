@@ -1,9 +1,9 @@
-# vlinder daemon
+# vlinderd
 
 Start the supervisor process manager.
 
 ```
-vlinder daemon
+vlinderd
 ```
 
 Starts the Supervisor, which spawns and manages all worker processes. The startup sequence is ordered by dependency:
@@ -15,7 +15,7 @@ Starts the Supervisor, which spawns and manages all worker processes. The startu
 5. **Harness** — gRPC bridge between CLI and daemon, waits for health check
 6. **Remaining workers** — agent runtimes, inference, storage, DAG git, session viewer
 
-Each worker is a separate `vlinder daemon` process launched with a `VLINDER_WORKER_ROLE` environment variable. Worker counts are configured in `config.toml` under `[distributed.workers]`.
+Each worker is a separate `vlinderd` process launched with a `VLINDER_WORKER_ROLE` environment variable. Worker counts are configured in `config.toml` under `[distributed.workers]`.
 
 See [Architecture](../../explanation/architecture.md) for the full Supervisor + Workers model.
 
