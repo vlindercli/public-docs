@@ -6,6 +6,26 @@
 
 ---
 
+## What blocks serious AI transformation?
+
+---
+
+<img src="images/travel.png" style="max-height: 75vh; object-fit: contain;"/>
+
+---
+
+<img src="images/ai-travel.png" style="max-height: 75vh; object-fit: contain;"/>
+
+---
+
+<img src="images/danger.png" style="max-height: 75vh; object-fit: contain;"/>
+
+---
+
+<img src="images/ai-vs-non-ai.png" style="max-height: 75vh; object-fit: contain;"/>
+
+---
+
 <small>
 
 **46%** of AI proof-of-concepts scrapped before production.
@@ -20,6 +40,135 @@
 
 **89%** observe. **32%** still blocked on quality.
 <small>— LangChain, 2026</small>
+
+</small>
+
+---
+
+## Our tools are built for a different world
+
+<small>
+
+Aggregates.
+Percentiles.
+Long-tail latencies.
+
+Built for the first kind of system.
+
+</small>
+
+---
+
+
+## Failures compound
+
+<small>
+
+An agent with 90% reliability.
+Six calls in a chain.
+
+</small>
+
+**51% success rate.**
+
+---
+
+## The one place it works
+
+<small>
+
+Coding agents.
+
+  - Formal specification. 
+  - Deterministic guardrails. 
+  - Fast feedback. 
+  - An expert human in the loop who owns the outcome.
+
+</small>
+
+---
+
+## But does it, really? 
+
+Cognitive surrender
+
+<small>
+
+Developers want it to work. They retry. They steer. They accept approximations.
+
+At some point, acceptance becomes surrender.
+
+</small>
+
+---
+
+## Customers don't write prompts the way developers do. 
+
+<small>
+
+End user inputs are lossy
+
+Especially if they are on mobile.
+
+</small>
+
+---
+
+## Desensitised
+
+<small>
+
+Customer support bots. Automated recruitment rejection emails.
+
+Your users have been here before.
+
+Every bad experience lowered the bar further.
+
+</small>
+
+---
+
+## The real customer
+
+<small>
+
+The human whose judgment determines whether an AI interaction succeeded.
+
+Not the buyer. 
+
+</small>
+
+---
+
+# So how do we really run AI in production?
+
+---
+
+## Treat AI as an unreliable external service.
+
+What does this mean?
+
+---
+
+## Isolate it
+
+<small>
+
+Separate your deterministic code from your non-deterministic code.
+
+</small>
+
+---
+
+## Capture all state
+
+<small>
+
+Queues. Distributed logs. Event sourcing.
+
+You already build systems where every state transition is recorded.
+
+AI is no different.
 
 </small>
 
@@ -137,103 +286,70 @@
 
 ---
 
-## Traditional code
-
-Gets **more predictable** in production.
-
----
-
-## AI
-
-Gets **less predictable** in production.
-
----
-
-## Our tools
+## Design failure first
 
 <small>
 
-Aggregates.
-Percentiles.
-Long-tail latencies.
+For every AI call: what does rollback look like? Retry? Escalation?
 
-<br>
-
-Built for the first kind of system.
+Compensating transactions are the  real product.
 
 </small>
 
 ---
 
-## AI inverts it
+## Build on protocols
 
 <small>
 
-One wrong answer can be the whole story.
+HTTP. REST. SQL.
 
-<br>
+You've always built on protocols, not products.
 
-Aggregates hide it.
+Push for, and watch out for standardisation. 
 
 </small>
 
 ---
 
-## And the input is lossy
+## Benchmark rigorously
 
 <small>
 
-Customers don't write prompts the way developers do.
+Test plans. Acceptance criteria. Regression suites.
 
-Especially on mobile.
-Especially on WhatsApp.
+You already do this.
 
 </small>
 
 ---
 
-## The one place AI works
+## Be able to swap models
 
 <small>
 
-Developers with coding agents.
+You've migrated databases.
+You've switched cloud providers.
+Optimize for the ability to swap.
 
-<br>
-
-The developer steers, retries, wants it to work.
-
-<br>
-
-Your customers won't.
+Your evaluation infrastructure is your competitive advantage.
 
 </small>
 
 ---
 
-## Where the work is
-
-<small>
-
-Context engineering.
-
-Long-running agents.
-
-Tool curation.
-
-Human-in-the-loop, by design.
-
-</small>
+<img src="images/ai-travel.png" style="max-height: 75vh; object-fit: contain;"/>
 
 ---
 
-## An infrastructure problem
+## The free text box is worth building.
 
-<small>
+Most teams just haven't been honest about what it takes.
 
-The right context for the AI.
+---
 
-The right moment for the human.
+# Questions?
 
-Without overwhelming them.
+---
 
-</small>
+# THANK YOU!
