@@ -6,11 +6,29 @@
 
 ---
 
+About me: An Platforms/Infrastructure engineer learning how to run AI in Production
+
+<small>
+
+  - 20 years in the industry 
+  - Currently Engineering Manager for Product and Billing Usage Data at GitLab
+  - Private Cloud platform at Booking.com
+  - Principal Engineering Manager at Microsoft for Azure Databricks
+  - Senior Site Reliability Engineer at Microsoft for Outlook Mobile
+  - Database Platforms at VMWare
+  - Building https://vlindercli.dev in my spare time.
+  - This talk is from my learnings while building Vlinder. 
+  - This talk does not reflect the views of my employer 
+
+</small>
+
+---
+
 ## What blocks serious AI transformation?
 
 ---
 
-<img src="images/travel.png" style="max-height: 75vh; object-fit: contain;"/>
+<img src="images/travel.png" style="max-height: 75vh; max-width: 90%; object-fit: contain;"/>
 
 ---
 
@@ -22,9 +40,7 @@
 
 ---
 
-<img src="images/ai-vs-non-ai.png" style="max-height: 75vh; object-fit: contain;"/>
 
----
 
 <small>
 
@@ -42,6 +58,10 @@
 <small>— LangChain, 2026</small>
 
 </small>
+
+---
+
+<img src="images/ai-vs-non-ai.png" style="max-height: 75vh; object-fit: contain;"/>
 
 ---
 
@@ -179,23 +199,23 @@ AI is no different.
 <svg viewBox="0 0 900 140" style="width: 95%; max-width: 1000px; margin: 40px auto; display: block; color: currentColor;" xmlns="http://www.w3.org/2000/svg">
   <g font-family="Source Sans Pro, Helvetica, sans-serif" font-size="32" fill="currentColor" stroke="currentColor" stroke-width="2">
     <rect x="20" y="40" width="100" height="60" rx="8" fill="none"/>
-    <text x="70" y="80" text-anchor="middle" stroke="none">A</text>
+    <text x="70" y="80" text-anchor="middle" stroke="none">DEL</text>
     <line x1="130" y1="70" x2="195" y2="70"/>
     <polygon points="195,64 207,70 195,76" stroke="none"/>
     <rect x="220" y="40" width="100" height="60" rx="8" fill="none"/>
-    <text x="270" y="80" text-anchor="middle" stroke="none">B</text>
+    <text x="270" y="80" text-anchor="middle" stroke="none">MUM</text>
     <line x1="330" y1="70" x2="395" y2="70"/>
     <polygon points="395,64 407,70 395,76" stroke="none"/>
     <rect x="420" y="40" width="100" height="60" rx="8" fill="none"/>
-    <text x="470" y="80" text-anchor="middle" stroke="none">C</text>
+    <text x="470" y="80" text-anchor="middle" stroke="none">HYD</text>
     <line x1="530" y1="70" x2="595" y2="70"/>
     <polygon points="595,64 607,70 595,76" stroke="none"/>
     <rect x="620" y="40" width="100" height="60" rx="8" fill="none"/>
-    <text x="670" y="80" text-anchor="middle" stroke="none">D</text>
+    <text x="670" y="80" text-anchor="middle" stroke="none">BLR</text>
     <line x1="730" y1="70" x2="795" y2="70"/>
     <polygon points="795,64 807,70 795,76" stroke="none"/>
     <rect x="820" y="40" width="100" height="60" rx="8" fill="none"/>
-    <text x="870" y="80" text-anchor="middle" stroke="none">E</text>
+    <text x="870" y="80" text-anchor="middle" stroke="none">MAA</text>
   </g>
 </svg>
 
@@ -206,23 +226,23 @@ AI is no different.
 <svg viewBox="0 0 900 140" style="width: 95%; max-width: 1000px; margin: 40px auto; display: block; color: currentColor;" xmlns="http://www.w3.org/2000/svg">
   <g font-family="Source Sans Pro, Helvetica, sans-serif" font-size="32" fill="currentColor" stroke="currentColor" stroke-width="2">
     <rect x="20" y="40" width="100" height="60" rx="8" fill="none"/>
-    <text x="70" y="80" text-anchor="middle" stroke="none">A</text>
+    <text x="70" y="80" text-anchor="middle" stroke="none">DEL</text>
     <line x1="130" y1="70" x2="185" y2="70"/>
     <polygon points="185,64 197,70 185,76" stroke="none"/>
     <rect x="200" y="40" width="100" height="60" rx="8" fill="none"/>
-    <text x="250" y="80" text-anchor="middle" stroke="none">B</text>
+    <text x="250" y="80" text-anchor="middle" stroke="none">MUM</text>
     <line x1="310" y1="70" x2="365" y2="70"/>
     <polygon points="365,64 377,70 365,76" stroke="none"/>
     <rect x="380" y="40" width="100" height="60" rx="8" fill="none"/>
-    <text x="430" y="80" text-anchor="middle" stroke="none">C</text>
+    <text x="430" y="80" text-anchor="middle" stroke="none">HYD</text>
     <text x="515" y="82" text-anchor="middle" stroke="none" font-size="42">✗</text>
     <g opacity="0.25">
       <rect x="555" y="40" width="100" height="60" rx="8" fill="none"/>
-      <text x="605" y="80" text-anchor="middle" stroke="none">D</text>
+      <text x="605" y="80" text-anchor="middle" stroke="none">BLR</text>
       <line x1="665" y1="70" x2="720" y2="70"/>
       <polygon points="720,64 732,70 720,76" stroke="none"/>
       <rect x="735" y="40" width="100" height="60" rx="8" fill="none"/>
-      <text x="785" y="80" text-anchor="middle" stroke="none">E</text>
+      <text x="785" y="80" text-anchor="middle" stroke="none">MAA</text>
     </g>
   </g>
 </svg>
@@ -234,7 +254,7 @@ AI is no different.
 <svg viewBox="0 0 900 200" style="width: 95%; max-width: 1000px; margin: 30px auto; display: block; color: currentColor;" xmlns="http://www.w3.org/2000/svg">
   <g font-family="Source Sans Pro, Helvetica, sans-serif" font-size="32" fill="currentColor" stroke="currentColor" stroke-width="2">
     <rect x="20" y="30" width="100" height="60" rx="8" fill="none"/>
-    <text x="70" y="70" text-anchor="middle" stroke="none">A</text>
+    <text x="70" y="70" text-anchor="middle" stroke="none">DEL</text>
     <g opacity="0.6" stroke-width="1.5">
       <rect x="45" y="115" width="50" height="60" rx="3" fill="none"/>
       <line x1="53" y1="128" x2="87" y2="128"/>
@@ -244,7 +264,7 @@ AI is no different.
     <line x1="130" y1="60" x2="185" y2="60"/>
     <polygon points="185,54 197,60 185,66" stroke="none"/>
     <rect x="200" y="30" width="100" height="60" rx="8" fill="none"/>
-    <text x="250" y="70" text-anchor="middle" stroke="none">B</text>
+    <text x="250" y="70" text-anchor="middle" stroke="none">MUM</text>
     <g opacity="0.6" stroke-width="1.5">
       <rect x="225" y="115" width="50" height="60" rx="3" fill="none"/>
       <line x1="233" y1="128" x2="267" y2="128"/>
@@ -254,7 +274,7 @@ AI is no different.
     <line x1="310" y1="60" x2="365" y2="60"/>
     <polygon points="365,54 377,60 365,66" stroke="none"/>
     <rect x="380" y="30" width="100" height="60" rx="8" fill="none"/>
-    <text x="430" y="70" text-anchor="middle" stroke="none">C</text>
+    <text x="430" y="70" text-anchor="middle" stroke="none">HYD</text>
     <g opacity="0.6" stroke-width="1.5">
       <rect x="405" y="115" width="50" height="60" rx="3" fill="none"/>
       <line x1="413" y1="128" x2="447" y2="128"/>
@@ -264,7 +284,7 @@ AI is no different.
     <line x1="490" y1="60" x2="545" y2="60"/>
     <polygon points="545,54 557,60 545,66" stroke="none"/>
     <rect x="560" y="30" width="100" height="60" rx="8" fill="none"/>
-    <text x="610" y="70" text-anchor="middle" stroke="none">D</text>
+    <text x="610" y="70" text-anchor="middle" stroke="none">BLR</text>
     <g opacity="0.6" stroke-width="1.5">
       <rect x="585" y="115" width="50" height="60" rx="3" fill="none"/>
       <line x1="593" y1="128" x2="627" y2="128"/>
@@ -274,7 +294,7 @@ AI is no different.
     <line x1="670" y1="60" x2="725" y2="60"/>
     <polygon points="725,54 737,60 725,66" stroke="none"/>
     <rect x="740" y="30" width="100" height="60" rx="8" fill="none"/>
-    <text x="790" y="70" text-anchor="middle" stroke="none">E</text>
+    <text x="790" y="70" text-anchor="middle" stroke="none">MAA</text>
     <g opacity="0.6" stroke-width="1.5">
       <rect x="765" y="115" width="50" height="60" rx="3" fill="none"/>
       <line x1="773" y1="128" x2="807" y2="128"/>
@@ -306,7 +326,7 @@ HTTP. REST. SQL.
 
 You've always built on protocols, not products.
 
-Push for, and watch out for standardisation. 
+Evangelise standardisation. 
 
 </small>
 
@@ -344,7 +364,7 @@ Your evaluation infrastructure is your competitive advantage.
 
 ## The free text box is worth building.
 
-Most teams just haven't been honest about what it takes.
+It just takes a lot of good old fashioned engineering. 
 
 ---
 
